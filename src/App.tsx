@@ -1,25 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Login } from './pages/Login/index';
+import { Home } from './pages/Home/index';
+import { AuthContextProvider } from "./contexts/AuthContext";
 
-function App() {
+import { GlobalStyle } from './styles/global';
+import './services/firebase';
+
+//o AuthContextProvider é um context q vai compartilhar info no app (user e funcao de login), ele
+//precisa envolver as Routes para q elas tenham acesso as info
+
+function App() {  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <AuthContextProvider>
+        <Routes>
+          <Route path="/" element={ <Login/> } />        
+          <Route path="/home" element={ <Home/> }  />        
+        </Routes>
+      </AuthContextProvider>
+      <GlobalStyle />
+    </BrowserRouter>
   );
 }
 
