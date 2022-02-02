@@ -9,12 +9,13 @@ interface BoxUserModalProps {
         name: string;
     },
     handleLogout: () => void;
+    handleCloseModal: () => void;
 }
 
-export function BoxUserModal({ isOpen, user, handleLogout }: BoxUserModalProps) {    
+export function BoxUserModal({ isOpen, user, handleLogout, handleCloseModal }: BoxUserModalProps) {    
     return(
         
-        <Modal isOpen={isOpen} >
+        <Modal isOpen={isOpen} onRequestClose={handleCloseModal} >
             <BoxUser>
                     <img src={user?.avatar} alt="" /> 
                     <span>Olá, {user?.name}</span> 

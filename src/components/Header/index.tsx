@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { BoxUserModal } from "../BoxUserModal";
 
-import { HeaderContainer, Content, HeaderLogo, HeaderInfo, HeaderMenu, UserPicture, MenuItem, BoxUser } from './style';
+import { HeaderContainer, Content, HeaderLogo, HeaderInfo, HeaderMenu, UserPicture, MenuItem } from './style';
 
 export function Header() {
     const [diag, setDiag] = useState(false);
@@ -32,6 +32,10 @@ export function Header() {
         setIsModalOpen(true);
     }
 
+    function handleCloseModal() {
+        setIsModalOpen(false);
+    }
+
     return(
         <HeaderContainer>
             <Content>
@@ -50,18 +54,19 @@ export function Header() {
                 </HeaderInfo>            
             </Content>
 
-            { diag &&     
+            { /*diag &&     
                 <BoxUser>
                     <img src={user?.avatar} alt="" /> 
                     <span>Olá, {user?.name}</span> 
                     <button onClick={handleLogOut}> Sair</button>
-                </BoxUser>  
+                </BoxUser> */ 
             }
 
             <BoxUserModal
                 isOpen={isModalOpen}
                 user={user}
                 handleLogout={handleLogOut}
+                handleCloseModal={handleCloseModal}
             />
 
 
