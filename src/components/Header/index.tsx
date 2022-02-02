@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { BoxUserModal } from "../BoxUserModal";
 
 import { HeaderContainer, Content, HeaderLogo, HeaderInfo, HeaderMenu, UserPicture, MenuItem, BoxUser } from './style';
 
 export function Header() {
     const [diag, setDiag] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const { user, signOutGoogle } = useAuth();
     const navigate = useNavigate();   
 
@@ -26,6 +28,10 @@ export function Header() {
         
     }
 
+    function handleOpenModal() {
+        setIsModalOpen(true);
+    }
+
     return(
         <HeaderContainer>
             <Content>
@@ -39,8 +45,8 @@ export function Header() {
                         </HeaderMenu>
                     </nav>
                     <UserPicture>
-                        <button onClick={showDialog} > <img src={user?.avatar} alt="" /> </button>                                         
-                    </UserPicture>                
+                        <button onClick={handleOpenModal} > <img src={user?.avatar} alt="Usuário" /> </button>                                         
+                    </UserPicture>                                    
                 </HeaderInfo>            
             </Content>
 
@@ -51,6 +57,16 @@ export function Header() {
                     <button onClick={handleLogOut}> Sair</button>
                 </BoxUser>  
             }
+
+            <BoxUserModal
+                isOpen={isModalOpen}
+                user={user}
+                handleLogout={handleLogOut}
+            />
+
+
+           
+            
         </HeaderContainer>
 
         

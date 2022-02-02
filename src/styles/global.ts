@@ -33,7 +33,7 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     body, input, textarea, button {
-        font-family: 'Roboto', sans-serif;              
+        font-family: 'Poppins', sans-serif;        
     }
 
     button {
