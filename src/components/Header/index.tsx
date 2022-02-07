@@ -68,12 +68,8 @@ export function Header() {
                 handleLogout={handleLogOut}
                 handleCloseModal={handleCloseModal}
             />
-
-
-           
             
         </HeaderContainer>
-
         
     )
 }

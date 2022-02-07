@@ -45,4 +45,29 @@ export const GlobalStyle = createGlobalStyle`
         opacity: 0.6;
         cursor: not-allowed;
     }
+
+    //classes para serem aplicadas aos modais da app; vao sobrescrever as classes nativas do react-modal
+    .react-modal-overlay {
+        background: transparent;
+
+        position: fixed; 
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        z-index: 1;
+
+        margin-top: 4rem;
+        
+    }   
+    
+    .react-modal-content {
+        /*width: 100%;
+        max-width: 576px;
+        background: var(--background);
+        padding: 3rem;
+        position: relative;
+        border-radius: 0.25rem;*/
+    }
 `;
