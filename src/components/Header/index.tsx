@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { BoxUserModal } from "../BoxUserModal";
+import { NewGoalModal } from "../NewGoalModal";
 
 import { HeaderContainer, Content, HeaderLogo, HeaderInfo, HeaderMenu, UserPicture, MenuItem } from './style';
 
 export function Header() {
-    const [diag, setDiag] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalUserOpen, setIsModalUserOpen] = useState(false);
+    const [isModalNewGoalOpen, setIsModalNewGoalOpen] = useState(false);
+
     const { user, signOutGoogle } = useAuth();
     const navigate = useNavigate();   
 
@@ -22,52 +24,53 @@ export function Header() {
         navigate('/');
     }
 
-    function showDialog(){        
-        
-        diag === true ? setDiag(false) : setDiag(true);        
-        
+
+    function handleOpenModalUser() {
+        setIsModalUserOpen(true);
     }
 
-    function handleOpenModal() {
-        setIsModalOpen(true);
+    function handleCloseModalUser() {
+        setIsModalUserOpen(false);
     }
 
-    function handleCloseModal() {
-        setIsModalOpen(false);
+    function handleOpenModalNewGoal(){
+        setIsModalNewGoalOpen(true);
+    }
+
+    function handleCloseModalNewGoal(){
+        setIsModalNewGoalOpen(false);
     }
 
     return(
-        <HeaderContainer>
+        <HeaderContainer  >
             <Content>
                 <HeaderLogo> <Link to="/">GoalsManager</Link> </HeaderLogo>            
                 <HeaderInfo >
                     <nav>
                         <HeaderMenu>
                             <MenuItem> <Link to="/">Nova Categoria</Link> </MenuItem>
-                            <MenuItem> <Link to="/">Nova Meta</Link> </MenuItem>
+                            <MenuItem> <span onClick={handleOpenModalNewGoal} >Nova Meta </span>  </MenuItem>
                             <MenuItem> <Link to="/">Listar Metas</Link> </MenuItem>
                         </HeaderMenu>
                     </nav>
                     <UserPicture>
-                        <button onClick={handleOpenModal} > <img src={user?.avatar} alt="Usuário" /> </button>                                         
+                        <button onClick={handleOpenModalUser} > <img src={user?.avatar} alt="Usuário" /> </button>                                         
                     </UserPicture>                                    
                 </HeaderInfo>            
             </Content>
 
-            { /*diag &&     
-                <BoxUser>
-                    <img src={user?.avatar} alt="" /> 
-                    <span>Olá, {user?.name}</span> 
-                    <button onClick={handleLogOut}> Sair</button>
-                </BoxUser> */ 
-            }
-
             <BoxUserModal
-                isOpen={isModalOpen}
+                isOpen={isModalUserOpen}
                 user={user}
                 handleLogout={handleLogOut}
-                handleCloseModal={handleCloseModal}
+                handleCloseModal={handleCloseModalUser}
             />
+
+            <NewGoalModal
+                isOpen={isModalNewGoalOpen}
+                handleCloseModal={handleCloseModalNewGoal}
+            />
+
             
         </HeaderContainer>
         

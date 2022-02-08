@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
-const screenWidth = window.screen.width;
-const marginBoxUser = screenWidth - (screenWidth - 1120) - 10;
+//const screenWidth = window.screen.width;
+//const marginBoxUser = screenWidth - (screenWidth - 1120) - 10;
 
 export const HeaderContainer = styled.header`
     width: 100%;
@@ -49,17 +49,25 @@ export const HeaderMenu = styled.ul`
 
 export const MenuItem = styled.li`
     display: inline-block;
-    padding: 1.25rem;
+    padding: 1.20rem;
+    
                 
     a {
         text-decoration: none;
         color: var(--fontColorLight);
         cursor: pointer;                
-
-        &:hover {
-            background-color: red;
-        }
     }    
+
+    span {
+        color: var(--fontColorLight);
+        cursor: pointer;                
+    }
+
+    transition: background-color 0.5s;
+
+    &:hover {
+        background-color: #3F51B5;
+    }
 `;
 
 

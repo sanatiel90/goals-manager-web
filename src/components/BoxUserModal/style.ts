@@ -56,5 +56,11 @@ export const BoxUser = styled.div`
 
         font-size: 1rem;
         font-weight: bold;
+
+        transition: filter 1s;
+
+        &:hover {
+            filter: brightness(0.8);
+        }
     }
 `;

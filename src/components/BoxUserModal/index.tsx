@@ -2,6 +2,8 @@ import Modal from 'react-modal';
 
 import { BoxUser } from './style';
 
+Modal.setAppElement('#root');
+
 interface BoxUserModalProps {
     isOpen: boolean;
     user?: {
@@ -18,7 +20,7 @@ export function BoxUserModal({ isOpen, user, handleLogout, handleCloseModal }: B
         <Modal 
             isOpen={isOpen} 
             onRequestClose={handleCloseModal}
-            overlayClassName='react-modal-overlay'
+            overlayClassName='react-modal-box-user'
             className='react-modal-content'
             >
             <BoxUser>

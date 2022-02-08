@@ -9,6 +9,7 @@ export const GlobalStyle = createGlobalStyle`
         --borderGrey: #616161;
         --fontColorLight: #fff;
         --fontColorDark: #424242;
+        --green: #43A047;
     }
 
     * {
@@ -47,7 +48,7 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     //classes para serem aplicadas aos modais da app; vao sobrescrever as classes nativas do react-modal
-    .react-modal-overlay {
+    .react-modal-box-user {
         background: transparent;
 
         position: fixed; 
@@ -58,16 +59,29 @@ export const GlobalStyle = createGlobalStyle`
 
         z-index: 1;
 
-        margin-top: 4rem;
-        
+        margin-top: 4rem;        
     }   
-    
-    .react-modal-content {
-        /*width: 100%;
-        max-width: 576px;
-        background: var(--background);
-        padding: 3rem;
-        position: relative;
-        border-radius: 0.25rem;*/
+
+    .react-modal-new-goal {
+        background: rgba(0, 0, 0, 0.5); //fundo escuro do modal
+
+        position: fixed; //pra sempre ficar fixo na tela
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
+
+    .react-modal-new-goal-content {
+        width: 100%;
+        max-width: 576px;
+        padding: 3rem;
+        border-radius: 0.25rem;
+        background: #f0f2f5;
+    }
+
 `;
