@@ -62,7 +62,7 @@ export const GlobalStyle = createGlobalStyle`
         margin-top: 4rem;        
     }   
 
-    .react-modal-new-goal {
+    .react-modal-basic {
         background: rgba(0, 0, 0, 0.5); //fundo escuro do modal
 
         position: fixed; //pra sempre ficar fixo na tela
@@ -76,7 +76,7 @@ export const GlobalStyle = createGlobalStyle`
         justify-content: center;
     }
 
-    .react-modal-new-goal-content {
+    .react-modal-basic-content {
         width: 100%;
         max-width: 576px;
         padding: 3rem;

@@ -11,8 +11,8 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
         <Modal
             isOpen={isOpen}
             onRequestClose={handleCloseModal} 
-            overlayClassName='react-modal-new-goal'
-            className='react-modal-new-goal-content'
+            overlayClassName='react-modal-basic'
+            className='react-modal-basic-content'
         >
 
             <FormContainer>
