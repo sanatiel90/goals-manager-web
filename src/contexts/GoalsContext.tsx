@@ -10,6 +10,7 @@ interface GoalType {
     category: string;
     deadline: string;
     status: string;
+    userId: string;
     createdAt: string;
 }
 
@@ -22,6 +23,7 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
 
     useEffect(() => {
         //chamada ao firebase para carregar as 15 ultimas goals
+        
     }, []);
 
     

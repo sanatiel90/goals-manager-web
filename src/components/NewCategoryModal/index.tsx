@@ -2,7 +2,9 @@ import { FormEvent, useState } from 'react';
 import Modal from 'react-modal';
 import { FormContainer } from './style';
 
-import { addDoc, collection, doc, getFirestore, setDoc } from 'firebase/firestore';
+import { useAuth } from './../../hooks/useAuth';
+
+import { addDoc, collection, getFirestore } from 'firebase/firestore';
 
 interface NewCategoryModalProps {
     isOpen: boolean;
@@ -12,6 +14,7 @@ interface NewCategoryModalProps {
 export function NewCategoryModal({ isOpen, handleCloseModal }: NewCategoryModalProps) {
 
     const [title, setTitle] = useState('');
+    const { user } = useAuth();
 
     async function handleNewCategory(event: FormEvent) {
         event.preventDefault();
@@ -20,16 +23,22 @@ export function NewCategoryModal({ isOpen, handleCloseModal }: NewCategoryModalP
             console.log('Preencha a descrição!');
         }
 
-       const db = getFirestore();
-       const categoryRef = await addDoc(collection(db, 'categories'), {
-           title
-       });
+        try {
+            const db = getFirestore();
+            await addDoc(collection(db, 'categories'), {
+                title,
+                userId: user?.id
+            });            
 
-       console.log(categoryRef.id);
+            setTitle('');
 
-       setTitle('');
+            handleCloseModal();
 
-       //cadastrado com sucesso       
+        } catch (error) {
+           console.log('Erro ao criar categoria');
+        }
+       
+        console.log('Categoria criada com sucesso!');         
 
     }
 
