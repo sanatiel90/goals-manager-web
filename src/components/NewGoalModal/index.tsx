@@ -1,6 +1,8 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, FormEvent } from 'react';
 import Modal from 'react-modal';
+import { toast, ToastContainer } from 'react-toastify';
 import { CategoriesContext } from '../../contexts/CategoriesContext';
+import { useGoal } from '../../hooks/useGoal';
 import { FormContainer } from './style';
 
 interface NewGoalModalProps {
@@ -15,6 +17,27 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
     const [deadline, setDeadline] = useState('');        
 
     const { categories }  = useContext(CategoriesContext);    
+    const { createNewGoal } = useGoal();
+
+    async function handleNewGoal(event: FormEvent){
+        event.preventDefault();
+        const goalInput = {
+            title,
+            category,
+            deadline
+        }
+        
+
+        await createNewGoal(goalInput);        
+
+        showToast();
+
+        handleCloseModal();
+    }
+
+    function showToast() {
+        return toast('Meta cadastrada com sucesso!');
+    }
             
     return (
         <Modal
@@ -24,7 +47,7 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
             className='react-modal-basic-content'
         >
            
-            <FormContainer>
+            <FormContainer onSubmit={handleNewGoal}>
                 <p>Nova Meta</p>
 
                 <input 
@@ -33,7 +56,7 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
                     value={title}
                     onChange={event => setTitle(event.target.value)} />
 
-                <select name="category" placeholder='Categoria'>
+                <select value={category} onChange={event => setCategory(event.target.value)} placeholder='Categoria'>
                     { categories.map(cat => (
                         <option key={cat.id} value={cat.title}>{cat.title}</option>
                     )) }                
@@ -52,6 +75,9 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
 
             </FormContainer>
 
+            
+
         </Modal>
+        
     );
 }

@@ -28,11 +28,14 @@ export function CategoriesContextProvider({ children }: CategoriesContextProvide
         
         if (user){            
             let categoriesFirebase: CategoryType[] = [];
-            const categoriesRef = collection(getFirestore(), 'categories');
-            const queryCategories = query(categoriesRef, where('userId', '==', user.id));
-            getDocs(queryCategories).then(categoriesSnapshot => {
-                
+            const categoriesRef = collection(getFirestore(), 'categories'); //pega a ref do documento(tabela)
+            const queryCategories = query(categoriesRef, where('userId', '==', user.id));  //cria uma query
+            
+            //usa o getDocs para pegar o snapshot com os resultados           
+            getDocs(queryCategories).then(categoriesSnapshot => {   
+                //percorre o snapshot  
                 categoriesSnapshot.forEach((cat) => {                    
+                    //add no array auxiliar as informacoes
                     categoriesFirebase.push({
                         id: cat.id,
                         title: cat.data().title,

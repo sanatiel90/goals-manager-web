@@ -108,3 +108,34 @@ export const IconButton = styled.button<IconButtonProps>`
     }
    
 `;
+
+export const NoGoal = styled.div`
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    p {
+        margin-top: 1rem;
+        font-size: 1.5rem;
+        font-weight: bold;
+        padding: 1rem 2rem;
+        background: var(--secondaryBlue);
+        border-radius: 0.25rem;
+        color: #fff;
+
+        cursor: pointer;
+
+        transition: filter 0.5s;
+
+        &:hover {
+            filter: brightness(0.8);
+        }
+    }
+`;
