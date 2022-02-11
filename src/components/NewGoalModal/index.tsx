@@ -1,6 +1,5 @@
 import { useState, useContext, FormEvent } from 'react';
 import Modal from 'react-modal';
-import { toast, ToastContainer } from 'react-toastify';
 import { CategoriesContext } from '../../contexts/CategoriesContext';
 import { useGoal } from '../../hooks/useGoal';
 import { FormContainer } from './style';
@@ -30,14 +29,11 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
 
         await createNewGoal(goalInput);        
 
-        showToast();
 
         handleCloseModal();
     }
 
-    function showToast() {
-        return toast('Meta cadastrada com sucesso!');
-    }
+
             
     return (
         <Modal
@@ -48,9 +44,9 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
         >
            
             <FormContainer onSubmit={handleNewGoal}>
-                <p>Nova Meta</p>
+                <p >Nova Meta</p>
 
-                <input 
+                <input                     
                     type="text" 
                     placeholder='Descrição'
                     value={title}
@@ -81,3 +77,4 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
         
     );
 }
+
