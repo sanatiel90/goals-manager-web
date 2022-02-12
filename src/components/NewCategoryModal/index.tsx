@@ -1,10 +1,14 @@
 import { FormEvent, useState } from 'react';
 import Modal from 'react-modal';
-import { FormContainer } from './style';
-
+import { FormContainer, InputForm } from './style';
 import { useAuth } from './../../hooks/useAuth';
 
+import 'react-toastify/dist/ReactToastify.css';
+
 import { addDoc, collection, getFirestore } from 'firebase/firestore';
+
+import React from 'react';
+import { toast, ToastContainer } from 'react-toastify';
 
 interface NewCategoryModalProps {
     isOpen: boolean;
@@ -14,13 +18,15 @@ interface NewCategoryModalProps {
 export function NewCategoryModal({ isOpen, handleCloseModal }: NewCategoryModalProps) {
 
     const [title, setTitle] = useState('');
+    const [errorTitle, setErrorTitle] = useState(false);
     const { user } = useAuth();
 
     async function handleNewCategory(event: FormEvent) {
         event.preventDefault();
 
         if(!title){
-            console.log('Preencha a descrição!');
+            setErrorTitle(true);
+            return;
         }
 
         try {
@@ -30,16 +36,25 @@ export function NewCategoryModal({ isOpen, handleCloseModal }: NewCategoryModalP
                 userId: user?.id
             });            
 
-            setTitle('');
+            setTitle('');           
 
+            toast.success("Categoria criada com sucesso!", {
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 2000              
+            });
+
+            if(errorTitle) {
+                setErrorTitle(false);
+            }
+        
             handleCloseModal();
 
-        } catch (error) {
-           console.log('Erro ao criar categoria');
-        }
-       
-        console.log('Categoria criada com sucesso!');         
-
+        } catch (error) {           
+            toast.success("Erro ao criar categoria", {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000              
+            });
+        }               
     }
 
 
@@ -53,7 +68,8 @@ export function NewCategoryModal({ isOpen, handleCloseModal }: NewCategoryModalP
             <FormContainer onSubmit={handleNewCategory} >
                 <p>Nova Categoria</p>
 
-                <input 
+                <InputForm 
+                    errorTitle={errorTitle}                    
                     type="text" 
                     placeholder='Descrição'  
                     value={title}
@@ -61,7 +77,7 @@ export function NewCategoryModal({ isOpen, handleCloseModal }: NewCategoryModalP
                 
                 <button type='submit'>Cadastrar</button>
             </FormContainer>
-
+            <ToastContainer />     
         </Modal>
     )
 }

@@ -12,16 +12,6 @@ export const FormContainer = styled.form`
         font-size: 1.5rem;
     }
 
-    input {
-        font-size: 1rem;
-        height: 2rem;
-        padding: 1.5rem;
-        width: 100%;
-        border-radius: 0.25rem;
-
-        border: 1px solid #BDBDBD;
-    }
-
     select {                
         padding: 1rem;
         font-size: 1rem;
@@ -31,6 +21,11 @@ export const FormContainer = styled.form`
     div {
         display: flex;
         flex-direction: column;
+
+        span {
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
     }
 
     button {
@@ -51,4 +46,23 @@ export const FormContainer = styled.form`
         }
     }
 
+`;
+
+interface InputFormProps {
+    errorInput: boolean;
+}
+
+export const InputForm = styled.input<InputFormProps>`
+    font-size: 1rem;
+    height: 2rem;
+    padding: 1.5rem;
+    width: 100%;
+    border-radius: 0.25rem;
+
+    border: 1px solid ${props => props.errorInput ? '#D50000' : '#BDBDBD' } ;
+
+`;
+
+export const SpanError = styled.span `
+    color: #D50000;
 `;

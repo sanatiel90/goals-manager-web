@@ -8,6 +8,7 @@ import { useGoal } from '../../hooks/useGoal';
 import { useModal } from '../../hooks/useModal';
 import { NewGoalModal } from '../../components/NewGoalModal';
 
+
 export function Home(){
     
     const { goals } = useGoal();   
@@ -39,7 +40,7 @@ export function Home(){
                     isOpen={newGoalModal.isOpen}
                     handleCloseModal={newGoalModal.handleClose}
                 />   
-                                                
+                                          
             </Content>
 
             

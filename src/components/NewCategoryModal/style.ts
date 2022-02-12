@@ -12,16 +12,6 @@ export const FormContainer = styled.form`
         font-size: 1.5rem;
     }
 
-    input {
-        font-size: 1rem;
-        height: 2rem;
-        padding: 1.5rem;
-        width: 100%;
-        border-radius: 0.25rem;
-
-        border: 1px solid #BDBDBD;
-    }
-
     button {
         height: 4rem;
         border: 0;
@@ -40,4 +30,17 @@ export const FormContainer = styled.form`
         }
     }
 
+`;
+
+interface InputFormProps {
+    errorTitle: boolean;
+}
+
+export const InputForm = styled.input<InputFormProps>`
+    font-size: 1rem;
+    height: 2rem;
+    padding: 1.5rem;
+    width: 100%;
+    border-radius: 0.25rem;
+    border: 1px solid ${props => props.errorTitle ? '#D50000' : '#BDBDBD'} ; //#BDBDBD
 `;

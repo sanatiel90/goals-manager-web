@@ -1,8 +1,10 @@
+import { exit } from 'process';
 import { useState, useContext, FormEvent } from 'react';
 import Modal from 'react-modal';
+import { toast, ToastContainer } from 'react-toastify';
 import { CategoriesContext } from '../../contexts/CategoriesContext';
 import { useGoal } from '../../hooks/useGoal';
-import { FormContainer } from './style';
+import { FormContainer, InputForm, SpanError } from './style';
 
 interface NewGoalModalProps {
     isOpen: boolean;
@@ -13,7 +15,10 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
 
     const [title, setTitle] = useState('');
     const [category, setCategory] = useState('');
-    const [deadline, setDeadline] = useState('');        
+    const [deadline, setDeadline] = useState('');    
+    const [errorTitle, setErrorTitle] = useState(false);
+    const [errorDeadline, setErrorDeadline] = useState(false);    
+    const [errorDeadlineWrong, setErrorDeadlineWrong] = useState(false);
 
     const { categories }  = useContext(CategoriesContext);    
     const { createNewGoal } = useGoal();
@@ -25,12 +30,57 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
             category,
             deadline
         }
-        
 
-        await createNewGoal(goalInput);        
+        if(!title){
+            setErrorTitle(true);
+        }
 
+        if(!deadline){
+            setErrorDeadline(true);                     
+        }
+      
+        if(!title || !deadline) {            
+            return;
+        }
 
-        handleCloseModal();
+        if(new Date(deadline).getDate() < new Date().getDate()){
+            setErrorDeadline(true);    
+            setErrorDeadlineWrong(true);   
+            return;
+        }
+
+        try {
+            await createNewGoal(goalInput);        
+
+            handleCloseModal();    
+
+            setTitle('');
+            setCategory('');
+            setDeadline('');
+
+            toast.success("Meta criada com sucesso!", {
+                position: 'top-center',
+                autoClose: 2000
+            })
+
+            if(errorTitle) {
+                setErrorTitle(false);
+            }
+
+            if(errorDeadline) {
+                setErrorDeadline(false);
+            }
+
+            if(errorDeadlineWrong) {
+                setErrorDeadlineWrong(false);
+            }
+
+        } catch (error) {
+            toast.error("Erro ao criar meta", {
+                position: 'top-center',
+                autoClose: 2000
+            })
+        }        
     }
 
 
@@ -44,23 +94,29 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
         >
            
             <FormContainer onSubmit={handleNewGoal}>
-                <p >Nova Meta</p>
+                <p>Nova Meta</p>
 
-                <input                     
+                <InputForm     
+                    errorInput={errorTitle}                
                     type="text" 
                     placeholder='Descrição'
                     value={title}
                     onChange={event => setTitle(event.target.value)} />
 
-                <select value={category} onChange={event => setCategory(event.target.value)} placeholder='Categoria'>
-                    { categories.map(cat => (
-                        <option key={cat.id} value={cat.title}>{cat.title}</option>
-                    )) }                
-                </select>
+                <div>
+                    <span>Categoria</span>
+                    <select value={category} onChange={event => setCategory(event.target.value)} placeholder='Categoria'>
+                        { categories.map(cat => (
+                            <option key={cat.id} value={cat.title}>{cat.title}</option>
+                        )) }                
+                    </select>
+                </div>        
 
                 <div>
                     <span>Prazo</span>
-                    <input 
+                    { errorDeadlineWrong && <SpanError>Prazo não pode ser anterior ou igual à data atual</SpanError> } 
+                    <InputForm                         
+                        errorInput={errorDeadline}
                         type="date" 
                         placeholder='Prazo' 
                         value={deadline}
@@ -70,9 +126,7 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
                 <button type='submit'>Cadastrar</button>
 
             </FormContainer>
-
-            
-
+            <ToastContainer />            
         </Modal>
         
     );
