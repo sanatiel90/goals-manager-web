@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDocs, getFirestore, query, setDoc, where } from "firebase/firestore";
+import { addDoc, collection, getFirestore, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 
@@ -13,7 +13,7 @@ interface GoalType {
     deadline: string;
     status: string;
     userId: string;
-    createdAt: string;
+    createdAt: Date;
 }
 
 interface NewGoalInput {
@@ -32,6 +32,7 @@ export const GoalsContext = createContext<GoalContextType>({} as GoalContextType
 
 export function GoalsContextProvider({children}: GoalsContextProviderProps) {
     const { user } = useAuth();
+    
 
     const [goals, setGoals] = useState<GoalType[]>([]);
 
@@ -40,10 +41,36 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
         if(user) {
             let goalsFirebase: GoalType[] = []; //array aux
             const goalsRef = collection(getFirestore(), 'goals'); //pega a ref
-            const queryGoals = query(goalsRef, where('userId', '==', user.id)); //monta query
+            const queryGoals = query(goalsRef, 
+                                        where('userId', '==', user.id), 
+                                        orderBy('createdAt', 'desc'),
+                                        limit(3),                                        
+                                        ); //monta query
 
-            //pega o snapshot e coloca os dados no array
-            getDocs(queryGoals).then(goalsSnapshot => {
+            //pega os dados em tempo real
+            onSnapshot(queryGoals, goalsSnapshot => {
+                goalsFirebase = [];
+                goalsSnapshot.forEach(goal => {
+                    goalsFirebase.push({
+                        id: goal.id,
+                        title: goal.data().title,
+                        category: goal.data().category,
+                        deadline: goal.data().deadline,
+                        status: goal.data().status,
+                        userId: goal.data().userId,
+                        createdAt: goal.data().createdAt,
+                    });
+                });
+
+                setGoals(goalsFirebase);
+            })
+
+            
+               
+            //unsubscribe();
+
+            //pega o snapshot e coloca os dados no array, esta forma pega so uma vez
+            /*getDocs(queryGoals).then(goalsSnapshot => {
                 goalsSnapshot.forEach(goal => {
                     goalsFirebase.push({
                         id: goal.id,
@@ -58,7 +85,7 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
 
                 //coloca no estado
                 setGoals(goalsFirebase);
-            });
+            });*/
         }
     }, [user]);
 
@@ -68,17 +95,13 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
             //cria uma nova goal com base no input do user e dos valores default
             const newGoal = {
                 ...newGoalInput,
-                status: 'Aberto',
+                status: 'open',
                 userId: user?.id,
-                createdAt: new Date().getDate().toString()
+                createdAt: new Date()
             }
 
-            console.log('NEW GOAL '+newGoal);
-
             //cria o novo goal, retornando uma ref q vai ter o id criado
-            const goalRef = await addDoc(collection(getFirestore(), 'goals'), newGoal);
-
-            console.log('ID '+goalRef.id);
+            const goalRef = await addDoc(collection(getFirestore(), 'goals'), newGoal);            
 
             //cria um data com o novo goal e o id
             const data = {

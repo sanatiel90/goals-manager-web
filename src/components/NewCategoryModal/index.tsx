@@ -37,12 +37,12 @@ export function NewCategoryModal({ isOpen, handleCloseModal }: NewCategoryModalP
             });            
 
             setTitle('');           
-
+            
             toast.success("Categoria criada com sucesso!", {
               position: toast.POSITION.TOP_CENTER,
               autoClose: 2000              
             });
-
+            
             if(errorTitle) {
                 setErrorTitle(false);
             }

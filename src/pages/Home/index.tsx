@@ -8,11 +8,13 @@ import { useGoal } from '../../hooks/useGoal';
 import { useModal } from '../../hooks/useModal';
 import { NewGoalModal } from '../../components/NewGoalModal';
 
+import { status } from './../../shared/status';
+
 
 export function Home(){
     
     const { goals } = useGoal();   
-    const { newGoalModal } = useModal() ;    
+    const { newGoalModal } = useModal() ;        
     
     return(
         <Container>                        
@@ -24,7 +26,7 @@ export function Home(){
                         <CardInfo flexAmount={1.5} ><span>{goal.title}</span></CardInfo>
                         <CardInfo><span>{goal.category}</span></CardInfo>
                         <CardInfo><span>{Intl.DateTimeFormat('pt-BR', {timeZone: 'UTC'}).format(new Date(goal.deadline))}</span></CardInfo>
-                        <CardInfo><StatusBadge status={'open'} >{goal.status}</StatusBadge></CardInfo>
+                        <CardInfo><StatusBadge status={'open'} >{status[goal.status].desc}</StatusBadge></CardInfo>
                         <CardInfo>
                             <IconButton actionType={'edit'} ><img src={editIcon} alt="Editar" /></IconButton>
                             <IconButton actionType={'delete'} ><img src={trashIcon} alt="Deletar" /></IconButton>

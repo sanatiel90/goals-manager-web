@@ -106,6 +106,7 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
                 <div>
                     <span>Categoria</span>
                     <select value={category} onChange={event => setCategory(event.target.value)} placeholder='Categoria'>
+                            <option key="" value="">-</option>
                         { categories.map(cat => (
                             <option key={cat.id} value={cat.title}>{cat.title}</option>
                         )) }                
