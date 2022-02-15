@@ -9,13 +9,41 @@ import { useModal } from '../../hooks/useModal';
 import { NewGoalModal } from '../../components/NewGoalModal';
 
 import { status } from './../../shared/status';
+import { EditGoalModal } from '../../components/EditGoalModal';
+import { useState } from 'react';
 
+interface GoalType {
+    id: string;
+    title: string;
+    category: string;
+    deadline: string;
+    status: string;
+    userId: string;
+    createdAt: Date;
+}
 
 export function Home(){
     
-    const { goals } = useGoal();   
-    const { newGoalModal } = useModal() ;        
+    const { goals, deleteGoal, findGoal } = useGoal();   
+    const { newGoalModal, editGoalModal } = useModal() ;      
+    const [goalEdit, setGoalEdit] = useState({} as GoalType);
     
+
+    async function handleDeleteGoal(id: string) {
+        if(window.confirm('Deseja realmente excluir essa meta?')){
+            await deleteGoal(id);
+        }        
+    }
+    
+
+    async function handleEditGoal(id: string){                        
+        const goal = await findGoal(id);                
+        if(goal){            
+            setGoalEdit(goal);
+            editGoalModal.handleOpen();
+        }
+    }
+
     return(
         <Container>                        
             <Header />
@@ -26,10 +54,10 @@ export function Home(){
                         <CardInfo flexAmount={1.5} ><span>{goal.title}</span></CardInfo>
                         <CardInfo><span>{goal.category}</span></CardInfo>
                         <CardInfo><span>{Intl.DateTimeFormat('pt-BR', {timeZone: 'UTC'}).format(new Date(goal.deadline))}</span></CardInfo>
-                        <CardInfo><StatusBadge status={'open'} >{status[goal.status].desc}</StatusBadge></CardInfo>
+                        <CardInfo><StatusBadge statusColor={status[goal.status].color} >{status[goal.status].desc}</StatusBadge></CardInfo>
                         <CardInfo>
-                            <IconButton actionType={'edit'} ><img src={editIcon} alt="Editar" /></IconButton>
-                            <IconButton actionType={'delete'} ><img src={trashIcon} alt="Deletar" /></IconButton>
+                            <IconButton onClick={() => handleEditGoal(goal.id)}  actionType={'edit'} ><img src={editIcon} alt="Editar" /></IconButton>
+                            <IconButton onClick={() => handleDeleteGoal(goal.id)} actionType={'delete'} ><img src={trashIcon} alt="Deletar" /></IconButton>
                         </CardInfo>
                     </CardGoal>                        
                 )) :                 
@@ -42,9 +70,14 @@ export function Home(){
                     isOpen={newGoalModal.isOpen}
                     handleCloseModal={newGoalModal.handleClose}
                 />   
+
+                <EditGoalModal
+                    isOpen={editGoalModal.isOpen}
+                    handleCloseModal={editGoalModal.handleClose}
+                    goal={goalEdit}
+                />
                                           
             </Content>
-
             
         </Container>       
     );

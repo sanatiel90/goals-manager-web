@@ -47,14 +47,7 @@ export const CardInfo = styled.div<CardInfoProps>`
 `;
 
 interface StatusBadgeProps {
-    status: 'open' | 'finished' | 'late' | 'caution'
-}
-
-const colorStatus = {
-    open: '#5C6BC0',
-    finished: '#2E7D32',    
-    late: '#D32F2F',
-    caution: '#F57C00'
+    statusColor: string;
 }
 
 export const StatusBadge = styled.p<StatusBadgeProps>`    
@@ -66,7 +59,7 @@ export const StatusBadge = styled.p<StatusBadgeProps>`
     color: var(--fontColorLight);
     font-size: 0.8rem;
 
-    background: ${(props) => colorStatus[props.status] };
+    background: ${(props) => props.statusColor }; 
     
 `;
 
@@ -76,35 +69,31 @@ interface IconButtonProps {
 
 const colorIconButton = {
     edit: '#303F9F',
-    delete: '#D50000',        
+    delete: '#D32F2F',        
 }
 
-export const IconButton = styled.button<IconButtonProps>`
-    border: 0;        
+export const IconButton = styled.button<IconButtonProps>`         
     margin-right: 1rem;
     padding: 0.20rem;
+    background: transparent;
     
-    //border-radius: 50%;
     border-radius: 6px;
-
-    background: ${(props) => transparentize(0.6,colorIconButton[props.actionType]) };
+    
+    border: solid 2px ${(props) => transparentize(0.2,colorIconButton[props.actionType]) };     
     
     display: flex;
     align-items: center;
     justify-content: center;
 
-    transition: filter 0.5s;
+    transition: background-color 0.2s;
 
-    &:hover {
-        //filter: brightness(0.4);
-        background: ${(props) => darken(0.1,colorIconButton[props.actionType]) };
-    }
-
-    
+    &:hover {        
+        background-color: ${(props) => darken(0,colorIconButton[props.actionType]) };
+    }    
 
     img {
         height: 20px;
-        width: 20px;        
+        width: 20px;              
     }
    
 `;

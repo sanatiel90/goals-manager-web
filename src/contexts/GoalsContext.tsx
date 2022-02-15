@@ -1,4 +1,4 @@
-import { addDoc, collection, getFirestore, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getFirestore, limit, onSnapshot, orderBy, query, setDoc, where } from "firebase/firestore";
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 
@@ -16,7 +16,8 @@ interface GoalType {
     createdAt: Date;
 }
 
-interface NewGoalInput {
+interface GoalInput {
+    id?: string;
     title: string;
     category: string;
     deadline: string;    
@@ -24,7 +25,10 @@ interface NewGoalInput {
 
 interface GoalContextType {
     goals: GoalType[],
-    createNewGoal: (newGoal: NewGoalInput) => Promise<void>;
+    createNewGoal: (newGoal: GoalInput) => Promise<void>;
+    deleteGoal: (goalId: string) => Promise<void>;
+    findGoal: (goalId: string) => Promise<GoalType | undefined>;
+    updateGoal: (editGoal: GoalType) => Promise<void>;
 }
 
 export const GoalsContext = createContext<GoalContextType>({} as GoalContextType);
@@ -33,11 +37,11 @@ export const GoalsContext = createContext<GoalContextType>({} as GoalContextType
 export function GoalsContextProvider({children}: GoalsContextProviderProps) {
     const { user } = useAuth();
     
-
     const [goals, setGoals] = useState<GoalType[]>([]);
 
+    //carrega 10 metas ordenadas pelo prazo de conclusao
     useEffect(() => {
-        //chamada ao firebase para carregar as 15 ultimas goals
+        //chamada ao firebase para carregar as 10 ultimas goals
         if(user) {
             let goalsFirebase: GoalType[] = []; //array aux
             const goalsRef = collection(getFirestore(), 'goals'); //pega a ref
@@ -47,7 +51,7 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
                                         limit(3),                                        
                                         ); //monta query
 
-            //pega os dados em tempo real
+            //pega os dados em tempo real e coloca num array
             onSnapshot(queryGoals, goalsSnapshot => {
                 goalsFirebase = [];
                 goalsSnapshot.forEach(goal => {
@@ -64,8 +68,6 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
 
                 setGoals(goalsFirebase);
             })
-
-            
                
             //unsubscribe();
 
@@ -89,8 +91,8 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
         }
     }, [user]);
 
-    
-    async function createNewGoal(newGoalInput: NewGoalInput){        
+    //cria nova meta
+    async function createNewGoal(newGoalInput: GoalInput){        
         if (user) {            
             //cria uma nova goal com base no input do user e dos valores default
             const newGoal = {
@@ -117,12 +119,48 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
         }
     }
 
+    //atualiza uma goal
+    async function updateGoal(editGoalInput: GoalType){        
+        if (user) {            
+
+            await setDoc(doc(getFirestore(), 'goals', editGoalInput.id), {
+                ...editGoalInput
+            });            
+        }
+    }
+
+
+    //busca uma goal
+    async function findGoal(goalId: string){
+        if(user){                        
+            const goalRef = doc(getFirestore(), 'goals', goalId); //recupera a ref da goal
+            const goalSnapshot = await getDoc(goalRef); //pega o snapshot
+            if(goalSnapshot.exists()){   
+                const goalFirebase: GoalType = { //preenche um obj GoalType com o resultado do snapshot
+                    id: goalId,
+                    title: goalSnapshot.data().title,
+                    category: goalSnapshot.data().category,
+                    deadline: goalSnapshot.data().deadline,
+                    status: goalSnapshot.data().status,
+                    userId: goalSnapshot.data().userId,
+                    createdAt: goalSnapshot.data().createdAt,                    
+                }
+                return goalFirebase;                                                                        
+            }                     
+        }
+    }
+
     function listAllGoals(){
         
     }
 
+    //apaga uma goal
+    async function deleteGoal(goalId: string){
+        await deleteDoc(doc(getFirestore(), 'goals', goalId));
+    }
+
     return (
-        <GoalsContext.Provider value={{ goals, createNewGoal }}>
+        <GoalsContext.Provider value={{ goals, createNewGoal, deleteGoal, findGoal, updateGoal }}>
             {children}
         </GoalsContext.Provider>
     )

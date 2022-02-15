@@ -4,6 +4,7 @@ import { useState } from "react";
 export function useModal() {
     const [isModalUserOpen, setIsModalUserOpen] = useState(false);
     const [isModalNewGoalOpen, setIsModalNewGoalOpen] = useState(false);
+    const [isModalEditGoalOpen, setIsModalEditGoalOpen] = useState(false);
     const [isModalNewCategoryOpen, setIsModalNewCategoryOpen] = useState(false);
 
     function handleOpenModalUser() {
@@ -20,6 +21,14 @@ export function useModal() {
 
     function handleCloseModalNewGoal(){
         setIsModalNewGoalOpen(false);
+    }
+
+    function handleOpenModalEditGoal(){
+        setIsModalEditGoalOpen(true);
+    }
+
+    function handleCloseModalEditGoal(){
+        setIsModalEditGoalOpen(false);
     }
 
     function handleOpenModalNewCategory(){
@@ -42,6 +51,12 @@ export function useModal() {
         handleClose: handleCloseModalNewGoal
     }
 
+    const editGoalModal = {
+        isOpen: isModalEditGoalOpen,
+        handleOpen: handleOpenModalEditGoal,
+        handleClose: handleCloseModalEditGoal
+    }
+
     const newCategoryModal = {
         isOpen: isModalNewCategoryOpen,
         handleOpen: handleOpenModalNewCategory,
@@ -51,6 +66,7 @@ export function useModal() {
     return {
         boxUserModal,
         newGoalModal,
+        editGoalModal,
         newCategoryModal
     }
 
