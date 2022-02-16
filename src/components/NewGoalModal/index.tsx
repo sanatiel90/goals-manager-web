@@ -23,12 +23,7 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
     const { createNewGoal } = useGoal();
 
     async function handleNewGoal(event: FormEvent){
-        event.preventDefault();
-        const goalInput = {
-            title,
-            category,
-            deadline
-        }
+        event.preventDefault();                
 
         if(!title){
             setErrorTitle(true);
@@ -41,11 +36,17 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
         if(!title || !deadline) {            
             return;
         }
-
+                
         if(new Date(deadline).getDate() < new Date().getDate()){
             setErrorDeadline(true);    
             setErrorDeadlineWrong(true);   
             return;
+        }       
+
+        const goalInput = {
+            title,
+            category,
+            deadline
         }
 
         try {
@@ -118,7 +119,7 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
                     <InputForm                         
                         errorInput={errorDeadline}
                         type="date" 
-                        placeholder='Prazo' 
+                        placeholder='Prazo'                         
                         value={deadline}
                         onChange={event => setDeadline(event.target.value)} />
                 </div>

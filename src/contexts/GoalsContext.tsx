@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getFirestore, limit, onSnapshot, orderBy, query, setDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getFirestore, limit, onSnapshot, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 
@@ -13,7 +13,7 @@ interface GoalType {
     deadline: string;
     status: string;
     userId: string;
-    createdAt: Date;
+    createdAt: string;
 }
 
 interface GoalInput {
@@ -46,21 +46,45 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
             let goalsFirebase: GoalType[] = []; //array aux
             const goalsRef = collection(getFirestore(), 'goals'); //pega a ref
             const queryGoals = query(goalsRef, 
-                                        where('userId', '==', user.id), 
+                                        where('userId', '==', user.id),                                                                                 
                                         orderBy('createdAt', 'desc'),
-                                        limit(3),                                        
-                                        ); //monta query
+                                        limit(10),                                        
+                                    ); //monta query
 
             //pega os dados em tempo real e coloca num array
             onSnapshot(queryGoals, goalsSnapshot => {
                 goalsFirebase = [];
                 goalsSnapshot.forEach(goal => {
+
+                    //se o status nao estiver finalizado, olhar se esta atrasado ou em atencao
+                    let currentStatus = goal.data().status;                                                            
+                    if(currentStatus !== 'finished'){      
+                        const currentDeadline = goal.data().deadline;   
+                        
+                        if(new Date(currentDeadline).getDate() > new Date().getDate() && currentStatus !== 'open'){
+                            currentStatus = 'open';
+                        }  
+
+                        if(new Date(currentDeadline).getDate() === new Date().getDate() && currentStatus !== 'caution'){                           
+                            currentStatus = 'caution';
+                        }  
+
+                        if(new Date(currentDeadline).getDate() < new Date().getDate() && currentStatus !== 'late'){                            
+                            currentStatus = 'late';
+                        }                                                   
+                    }
+
+                    //se tiver mudado o status, atualizar no banco
+                    if(currentStatus !== goal.data().status) {                        
+                         updateCurrentStatus(goal.id, currentStatus);
+                    }
+
                     goalsFirebase.push({
                         id: goal.id,
                         title: goal.data().title,
                         category: goal.data().category,
                         deadline: goal.data().deadline,
-                        status: goal.data().status,
+                        status: currentStatus,
                         userId: goal.data().userId,
                         createdAt: goal.data().createdAt,
                     });
@@ -69,27 +93,16 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
                 setGoals(goalsFirebase);
             })
                
-            //unsubscribe();
-
-            //pega o snapshot e coloca os dados no array, esta forma pega so uma vez
-            /*getDocs(queryGoals).then(goalsSnapshot => {
-                goalsSnapshot.forEach(goal => {
-                    goalsFirebase.push({
-                        id: goal.id,
-                        title: goal.data().title,
-                        category: goal.data().category,
-                        deadline: goal.data().deadline,
-                        status: goal.data().status,
-                        userId: goal.data().userId,
-                        createdAt: goal.data().createdAt,
-                    });
-                });
-
-                //coloca no estado
-                setGoals(goalsFirebase);
-            });*/
+            //unsubscribe();           
         }
     }, [user]);
+
+    async function updateCurrentStatus(goalId: string, currentStatus: string) {
+        const goalRef = doc(getFirestore(), "goals", goalId);
+        await updateDoc(goalRef, {
+            status: currentStatus
+        })
+    }
 
     //cria nova meta
     async function createNewGoal(newGoalInput: GoalInput){        
@@ -99,7 +112,7 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
                 ...newGoalInput,
                 status: 'open',
                 userId: user?.id,
-                createdAt: new Date()
+                createdAt: new Date().toLocaleString('pt-BR')
             }
 
             //cria o novo goal, retornando uma ref q vai ter o id criado
@@ -150,8 +163,59 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
         }
     }
 
-    function listAllGoals(){
-        
+
+    function detailAllGoals(){
+        /*if(user) {
+            let goalsFirebase: GoalType[] = []; //array aux
+            const goalsRef = collection(getFirestore(), 'goals'); //pega a ref
+            const queryGoals = query(goalsRef, 
+                                        where('userId', '==', user.id), 
+                                        where('status', '!=', 'finished'),
+                                        orderBy('createdAt', 'desc'),
+                                        limit(10),                                        
+                                    ); //monta query
+
+            //pega os dados em tempo real e coloca num array
+            onSnapshot(queryGoals, goalsSnapshot => {
+                goalsFirebase = [];
+                goalsSnapshot.forEach(goal => {
+
+                    //se o status nao estiver finalizado, olhar se esta atrasado ou em atencao
+                    let currentStatus = goal.data().status;                                                            
+                    if(currentStatus !== 'finished'){      
+                        const currentDeadline = goal.data().deadline;   
+                        
+                        if(new Date(currentDeadline).getDate() > new Date().getDate() && currentStatus !== 'open'){
+                            currentStatus = 'open';
+                        }  
+
+                        if(new Date(currentDeadline).getDate() === new Date().getDate() && currentStatus !== 'caution'){                           
+                            currentStatus = 'caution';
+                        }  
+
+                        if(new Date(currentDeadline).getDate() < new Date().getDate() && currentStatus !== 'late'){                            
+                            currentStatus = 'late';
+                        }                                                   
+                    }
+
+                    //se tiver mudado o status, atualizar no banco
+                    if(currentStatus !== goal.data().status) {                        
+                         updateCurrentStatus(goal.id, currentStatus);
+                    }
+
+                    goalsFirebase.push({
+                        id: goal.id,
+                        title: goal.data().title,
+                        category: goal.data().category,
+                        deadline: goal.data().deadline,
+                        status: currentStatus,
+                        userId: goal.data().userId,
+                        createdAt: goal.data().createdAt,
+                    });
+                });
+
+                setGoals(goalsFirebase);
+            })*/
     }
 
     //apaga uma goal

@@ -13,7 +13,7 @@ interface GoalType {
     deadline: string;
     status: string;
     userId: string;
-    createdAt: Date;
+    createdAt: string;
 }
 
 

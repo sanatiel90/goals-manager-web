@@ -1,6 +1,6 @@
 import { Header } from '../../components/Header';
 
-import { Container, Content, CardGoal, CardInfo, StatusBadge, IconButton, NoGoal } from './style';
+import { Container, Content, CardGoal, CardInfo, StatusBadge, IconButton, NoGoal  } from './style';
 
 import editIcon from './../../assets/images/edit-icon.svg';
 import trashIcon from './../../assets/images/trash-icon.svg';
@@ -22,7 +22,7 @@ interface GoalType {
     createdAt: string;
 }
 
-export function Home(){
+export function GoalsDetail(){
     
     const { goals, deleteGoal, findGoal } = useGoal();   
     const { newGoalModal, editGoalModal } = useModal() ;      
@@ -48,11 +48,21 @@ export function Home(){
         <Container>                        
             <Header />
             <Content>
+                    <CardGoal style={ { background: '#fff', height: '2rem' } } >                        
+                        <CardInfo flexAmount={1.5} ><span>Descrição</span></CardInfo>
+                        <CardInfo><span>Categoria</span></CardInfo>
+                        <CardInfo><span>Criada em</span></CardInfo>
+                        <CardInfo><span>Prazo</span></CardInfo>
+                        <CardInfo>Status</CardInfo>
+                        <CardInfo><span>Ações</span></CardInfo>
+                    </CardGoal>    
+
                 { goals.length > 0 ? goals.map(goal => (
                                         
                     <CardGoal key={goal.id} >                        
                         <CardInfo flexAmount={1.5} ><span>{goal.title}</span></CardInfo>
                         <CardInfo><span>{goal.category}</span></CardInfo>
+                        <CardInfo><span>{goal.createdAt.substring(0, 10)}</span></CardInfo>
                         <CardInfo><span>{Intl.DateTimeFormat('pt-BR', {timeZone: 'UTC'}).format(new Date(goal.deadline))}</span></CardInfo>
                         <CardInfo><StatusBadge statusColor={status[goal.status].color} >{status[goal.status].desc}</StatusBadge></CardInfo>
                         <CardInfo>

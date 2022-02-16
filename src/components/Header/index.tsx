@@ -30,13 +30,13 @@ export function Header() {
     return(
         <HeaderContainer  >
             <Content>
-                <HeaderLogo> <Link to="/">GoalsManager</Link> </HeaderLogo>            
+                <HeaderLogo> <Link to="/home">GoalsManager</Link> </HeaderLogo>            
                 <HeaderInfo >
                     <nav>
                         <HeaderMenu>
                             <MenuItem> <span onClick={newCategoryModal.handleOpen}>Nova Categoria </span> </MenuItem>
                             <MenuItem> <span onClick={newGoalModal.handleOpen}>Nova Meta </span>  </MenuItem>
-                            <MenuItem> <Link to="/">Listar Metas</Link> </MenuItem>
+                            <MenuItem> <Link to="/goals-detail">Listar Metas</Link> </MenuItem>
                         </HeaderMenu>
                     </nav>
                     <UserPicture>
