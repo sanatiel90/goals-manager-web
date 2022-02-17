@@ -47,6 +47,7 @@ export const CardInfo = styled.div<CardInfoProps>`
     align-items: center;
     justify-content: center;    
 
+    text-align: start;
 `;
 
 interface StatusBadgeProps {
@@ -133,9 +134,11 @@ export const NoGoal = styled.div`
 `;
 
 export const FilterOptions = styled.div`
-    background: red;
+    background: #90CAF9;    
     padding: 1rem;
-    margin: 1rem;    
+    margin: 1rem; 
+    
+    border-radius: 0.25rem;
 
     font-size: 1.1rem;
 
@@ -156,6 +159,13 @@ export const FilterOptions = styled.div`
     span {
         margin-left: 1rem;
         margin-right: 0.5rem;
+    }
+
+    select {                
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 1rem;
+        border: 1px solid #BDBDBD;
     }
 `;
 

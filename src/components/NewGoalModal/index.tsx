@@ -63,6 +63,8 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
                 autoClose: 2000
             })
 
+            alert('Meta criada com sucesso!');
+
             if(errorTitle) {
                 setErrorTitle(false);
             }
@@ -80,6 +82,7 @@ export function NewGoalModal({isOpen, handleCloseModal}: NewGoalModalProps) {
                 position: 'top-center',
                 autoClose: 2000
             })
+            alert('Erro ao criar meta');
         }        
     }
 

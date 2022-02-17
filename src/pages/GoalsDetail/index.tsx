@@ -12,7 +12,7 @@ import { status } from './../../shared/status';
 import { EditGoalModal } from '../../components/EditGoalModal';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { collection, getFirestore, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { collection, getFirestore, onSnapshot, orderBy, OrderByDirection, query, where } from 'firebase/firestore';
 
 interface GoalType {
     id: string;
@@ -26,21 +26,37 @@ interface GoalType {
 
 export function GoalsDetail(){
     const { user } = useAuth();
+
+    const [goals, setGoals] = useState<GoalType[]>([]);
     
-    const { goals, deleteGoal, findGoal } = useGoal();   
+    const { deleteGoal, findGoal } = useGoal();   
     const { newGoalModal, editGoalModal } = useModal() ;      
     const [goalEdit, setGoalEdit] = useState({} as GoalType);
-    
+
+    const [finishedGoalsFilter, setFinishedGoalsFilter] = useState(true);
+    const [lateGoalsFilter, setLateGoalsFilter] = useState(true);
+    const [openGoalsFilter, setOpenGoalsFilter] = useState(true);
+    const [orderClause, setOrderClause] = useState('deadline');
 
     useEffect(() => {
         if(user) {
             let goalsFirebase: GoalType[] = []; //array aux
             const goalsRef = collection(getFirestore(), 'goals'); //pega a ref
+            
+            const statusChecked = [];
+            finishedGoalsFilter && statusChecked.push('finished');
+            lateGoalsFilter && statusChecked.push('late');
+            openGoalsFilter && statusChecked.push('open');   
+            
+            let orderDirection: OrderByDirection = 'asc';
+            if(orderClause === 'status') {
+                orderDirection = 'desc';
+            } 
+
             const queryGoals = query(goalsRef, 
-                                        where('userId', '==', user.id),
-                                        where('status', '!=', 'finished'),
-                                        orderBy('status'),                                                                                 
-                                        orderBy('deadline')                                        
+                                        where('userId', '==', user.id),                                                                                
+                                        where('status', 'in', statusChecked),
+                                        orderBy(orderClause, orderDirection)                                                                                                      
                                     ); //monta query
 
             //pega os dados em tempo real e coloca num array
@@ -82,12 +98,12 @@ export function GoalsDetail(){
                     });
                 });
 
-                //setGoals(goalsFirebase);
+                setGoals(goalsFirebase);
             })
                
             //unsubscribe();           
         }
-    }, []);
+    }, [finishedGoalsFilter, lateGoalsFilter, openGoalsFilter, orderClause, user]);
 
     
 
@@ -110,32 +126,48 @@ export function GoalsDetail(){
         <Container>                        
             <Header />
             <Content>
-                    <FilterOptions>
-                        <input type="checkbox" id='finished-goals' />
-                        <label htmlFor='finished-goals' >Finalizadas</label>
-                        
-                        <input type="checkbox" id='late-goals' />
-                        <label htmlFor='late-goals' >Atrasadas</label>
+                    { goals.length > 0 &&
+                      <>
+                        <FilterOptions>
+                            <input 
+                                type="checkbox" 
+                                id='finished-goals' 
+                                checked={finishedGoalsFilter} 
+                                onChange={() => finishedGoalsFilter ? setFinishedGoalsFilter(false) : setFinishedGoalsFilter(true) } />
+                            <label htmlFor='finished-goals' >Finalizadas</label>
+                            
+                            <input 
+                                type="checkbox" 
+                                id='late-goals' 
+                                checked={lateGoalsFilter}
+                                onChange={() => lateGoalsFilter ? setLateGoalsFilter(false) : setLateGoalsFilter(true) } />
+                            <label htmlFor='late-goals' >Atrasadas</label>
 
-                        <input type="checkbox" id='open-goals' />
-                        <label htmlFor='open-goals' >Em Aberto</label>
+                            <input 
+                                type="checkbox" 
+                                id='open-goals' 
+                                checked={openGoalsFilter}
+                                onChange={() => openGoalsFilter ? setOpenGoalsFilter(false) : setOpenGoalsFilter(true) } />
+                            <label htmlFor='open-goals' >Em Aberto</label>
 
-                        <span>Ordernar por</span>
-                        <select name="" id="">
-                            <option value="">Prazo</option>
-                            <option value="">Status</option>
-                            <option value="">Categoria</option>
-                        </select>
-                    </FilterOptions>
+                            <span>Ordernar por</span>
+                            <select value={orderClause} onChange={event => setOrderClause(event.target.value)} >
+                                <option value={'deadline'}>Prazo</option>
+                                <option value={'status'}>Status</option>
+                                <option value={'category'}>Categoria</option>
+                            </select>
+                        </FilterOptions>
 
-                    <CardGoal style={ { background: '#fff', height: '2rem' } } >                        
-                        <CardInfo flexAmount={1.5} ><span>Descrição</span></CardInfo>
-                        <CardInfo><span>Categoria</span></CardInfo>
-                        <CardInfo><span>Criada em</span></CardInfo>
-                        <CardInfo><span>Prazo</span></CardInfo>
-                        <CardInfo>Status</CardInfo>
-                        <CardInfo><span>Ações</span></CardInfo>
-                    </CardGoal>    
+                        <CardGoal style={ { background: '#fff', height: '2rem' } } >                        
+                            <CardInfo flexAmount={1.5} ><span>Descrição</span></CardInfo>
+                            <CardInfo><span>Categoria</span></CardInfo>
+                            <CardInfo><span>Criada em</span></CardInfo>
+                            <CardInfo><span>Prazo</span></CardInfo>
+                            <CardInfo>Status</CardInfo>
+                            <CardInfo><span>Ações</span></CardInfo>
+                        </CardGoal>    
+                      </>      
+                    }
 
                 { goals.length > 0 ? goals.map(goal => (
                                         
