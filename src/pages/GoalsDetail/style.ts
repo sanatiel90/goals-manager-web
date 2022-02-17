@@ -132,5 +132,30 @@ export const NoGoal = styled.div`
     }
 `;
 
+export const FilterOptions = styled.div`
+    background: red;
+    padding: 1rem;
+    margin: 1rem;    
 
+    font-size: 1.1rem;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+    input {
+        margin-right: 0.5rem;     
+        height: 1rem;
+        width: 1rem;
+    }
+
+    label {
+        margin-right: 1rem;
+    }
+
+    span {
+        margin-left: 1rem;
+        margin-right: 0.5rem;
+    }
+`;
 

@@ -46,8 +46,10 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
             let goalsFirebase: GoalType[] = []; //array aux
             const goalsRef = collection(getFirestore(), 'goals'); //pega a ref
             const queryGoals = query(goalsRef, 
-                                        where('userId', '==', user.id),                                                                                 
-                                        orderBy('createdAt', 'desc'),
+                                        where('userId', '==', user.id),
+                                        where('status', '!=', 'finished'),
+                                        orderBy('status'),                                                                                 
+                                        orderBy('deadline'),
                                         limit(10),                                        
                                     ); //monta query
 
@@ -61,17 +63,17 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
                     if(currentStatus !== 'finished'){      
                         const currentDeadline = goal.data().deadline;   
                         
-                        if(new Date(currentDeadline).getDate() > new Date().getDate() && currentStatus !== 'open'){
+                        if(new Date(currentDeadline).getTime() > new Date().getTime() && currentStatus !== 'open'){
                             currentStatus = 'open';
-                        }  
+                        }                          
 
-                        if(new Date(currentDeadline).getDate() === new Date().getDate() && currentStatus !== 'caution'){                           
+                        if(new Date(currentDeadline).getTime() < new Date().getTime() && currentStatus !== 'late'){                            
+                            currentStatus = 'late';
+                        }       
+                        
+                        if(new Date(currentDeadline).getTime() === new Date().getTime() && currentStatus !== 'caution'){                           
                             currentStatus = 'caution';
                         }  
-
-                        if(new Date(currentDeadline).getDate() < new Date().getDate() && currentStatus !== 'late'){                            
-                            currentStatus = 'late';
-                        }                                                   
                     }
 
                     //se tiver mudado o status, atualizar no banco
