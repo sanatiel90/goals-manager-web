@@ -39,8 +39,14 @@ export const HeaderInfo = styled.div`
     flex-direction: row; 
 
     nav {
-        margin-right: 0.6rem;        
+        margin-right: 0.6rem;     
+        
+        @media(max-width: 720px){
+            display: none;
+        }
     }
+
+    
 `;
 
 export const HeaderMenu = styled.ul`

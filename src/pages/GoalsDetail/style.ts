@@ -34,6 +34,11 @@ export const CardGoal = styled.div`
     font-weight: 500;
     font-size: 1rem;
 
+    @media(max-width: 720px) {
+        
+    }
+
+
 `;
 
 interface CardInfoProps {
@@ -47,6 +52,7 @@ export const CardInfo = styled.div<CardInfoProps>`
     align-items: center;
     justify-content: center;    
 
+    
     text-align: start;
 `;
 
@@ -77,9 +83,9 @@ const colorIconButton = {
 }
 
 export const IconButton = styled.button<IconButtonProps>`         
-    margin-right: 1rem;
+    margin-right: 0.4rem;
     padding: 0.20rem;
-    background: transparent;
+    background: transparent;    
     
     border-radius: 6px;
     
@@ -96,15 +102,21 @@ export const IconButton = styled.button<IconButtonProps>`
     }    
 
     img {
-        height: 20px;
-        width: 20px;              
+        height: 1.25rem;
+        width: 1.25rem;              
     }
    
 `;
 
-export const NoGoal = styled.div`
+interface NoGoalProps {
+    isVisible: boolean;
+}
+
+export const NoGoal = styled.div<NoGoalProps>`
+    display: ${props => props.isVisible ? 'flex' : 'none'};
+    
     background: #fff;
-    display: flex;
+    
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -135,8 +147,9 @@ export const NoGoal = styled.div`
 
 export const FilterOptions = styled.div`
     background: #90CAF9;    
-    padding: 1rem;
-    margin: 1rem; 
+    padding: 1rem;    
+
+    width: 100%;
     
     border-radius: 0.25rem;
 
@@ -149,7 +162,7 @@ export const FilterOptions = styled.div`
     input {
         margin-right: 0.5rem;     
         height: 1rem;
-        width: 1rem;
+        width: 1rem;        
     }
 
     label {
@@ -167,5 +180,104 @@ export const FilterOptions = styled.div`
         font-size: 1rem;
         border: 1px solid #BDBDBD;
     }
+
+    @media(max-width:720px) {
+        font-size: 0.8rem;
+        input {            
+            height: 1.3rem;
+            width: 1.3rem;
+        }
+
+        label {
+            margin-right: 0.5rem;
+        }
+
+        span {
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+        }
+
+
+        select {
+            padding: 0.4rem;        
+            font-size: 0.8rem;
+        }
+    }
 `;
 
+export const ActionsMenu = styled.div`
+
+    @media(min-width: 721px){
+        display: none;
+    }
+
+    margin-top: 1rem;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+
+    button {
+        border: 0;
+        border-radius: 0.25rem;
+        background: var(--primaryBlue);
+        padding: 0.3rem 0.7rem;
+
+        width: 100%;
+        max-width: 4rem;
+
+        transition: filter 0.5s;
+
+        &:hover {
+            filter: brightness(0.7);
+        }
+    }    
+
+`;
+
+interface TableContainerProps {
+    isVisible: boolean;
+}
+
+export const TableContainer = styled.div<TableContainerProps>`
+    display: ${props => !props.isVisible && 'none'};
+
+    margin-top: 1rem;    
+
+    table {        
+        width: 100%;
+        border-spacing: 0.2rem 0.6rem; //prop que coloca espaçamento entre elementos da table
+
+        th {            
+            font-weight: 400;
+            padding: 1rem 1rem;
+            text-align: left;
+        }
+
+        td {            
+            padding: 1rem;
+            border: 0;
+            background: #E3F2FD;            
+            border-radius: 0.25rem;     
+            
+            button {
+                @media(max-width: 720px) {
+                    margin-bottom: 0.4rem;
+                }
+            }
+                    
+
+            &:last-child {
+                @media(min-width: 720px){
+                    display: flex;
+                    height: 4.4rem;
+                }                
+            }
+        }
+
+
+
+        
+    }
+
+`;

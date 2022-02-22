@@ -1,6 +1,6 @@
 import { Header } from '../../components/Header';
 
-import { Container, Content, CardGoal, CardInfo, StatusBadge, IconButton, NoGoal, FilterOptions  } from './style';
+import { Container, Content, ActionsMenu, StatusBadge, IconButton, NoGoal, FilterOptions, TableContainer } from './style';
 
 import editIcon from './../../assets/images/edit-icon.svg';
 import trashIcon from './../../assets/images/trash-icon.svg';
@@ -156,37 +156,51 @@ export function GoalsDetail(){
                                 <option value={'status'}>Status</option>
                                 <option value={'category'}>Categoria</option>
                             </select>
-                        </FilterOptions>
+                        </FilterOptions>   
 
-                        <CardGoal style={ { background: '#fff', height: '2rem' } } >                        
-                            <CardInfo flexAmount={1.5} ><span>Descrição</span></CardInfo>
-                            <CardInfo><span>Categoria</span></CardInfo>
-                            <CardInfo><span>Criada em</span></CardInfo>
-                            <CardInfo><span>Prazo</span></CardInfo>
-                            <CardInfo>Status</CardInfo>
-                            <CardInfo><span>Ações</span></CardInfo>
-                        </CardGoal>    
+                        <ActionsMenu>
+                            <button onClick={newGoalModal.handleOpen} >+ Meta</button>
+                            <button >+ Cat.</button>
+                            <button>- Cat.</button>
+                        </ActionsMenu>
+                                                              
                       </>      
-                    }
-
-                { goals.length > 0 ? goals.map(goal => (
+                    }                
                                         
-                    <CardGoal key={goal.id} >                        
-                        <CardInfo flexAmount={1.5} ><span>{goal.title}</span></CardInfo>
-                        <CardInfo><span>{goal.category}</span></CardInfo>
-                        <CardInfo><span>{goal.createdAt.substring(0, 10)}</span></CardInfo>
-                        <CardInfo><span>{Intl.DateTimeFormat('pt-BR', {timeZone: 'UTC'}).format(new Date(goal.deadline))}</span></CardInfo>
-                        <CardInfo><StatusBadge statusColor={status[goal.status].color} >{status[goal.status].desc}</StatusBadge></CardInfo>
-                        <CardInfo>
-                            <IconButton onClick={() => handleEditGoal(goal.id)}  actionType={'edit'} ><img src={editIcon} alt="Editar" /></IconButton>
-                            <IconButton onClick={() => handleDeleteGoal(goal.id)} actionType={'delete'} ><img src={trashIcon} alt="Deletar" /></IconButton>
-                        </CardInfo>
-                    </CardGoal>                        
-                )) :                 
-                    <NoGoal>
+                    <TableContainer isVisible={goals.length > 0} >            
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Categoria</th>
+                                    <th>Criada em</th>
+                                    <th>Prazo</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { goals.map(goal => (
+                                    <tr key={goal.id} > 
+                                        <td><span>{goal.title}</span></td>
+                                        <td><span>{goal.category}</span></td>
+                                        <td><span>{goal.createdAt.substring(0, 10)}</span></td>
+                                        <td><span>{Intl.DateTimeFormat('pt-BR', {timeZone: 'UTC'}).format(new Date(goal.deadline))}</span></td>
+                                        <td><StatusBadge statusColor={status[goal.status].color} >{status[goal.status].desc}</StatusBadge></td>
+                                        <td>
+                                            <IconButton onClick={() => handleEditGoal(goal.id)}  actionType={'edit'} ><img src={editIcon} alt="Editar" /></IconButton>                                            
+                                            <IconButton onClick={() => handleDeleteGoal(goal.id)} actionType={'delete'} ><img src={trashIcon} alt="Deletar" /></IconButton>                                            
+                                        </td>                                                                                                                                                
+                                    </tr>   
+                                 )) }
+                            </tbody>
+                        </table>     
+                    </TableContainer>                
+                               
+                    <NoGoal isVisible={goals.length === 0}>
                         <h2>Você ainda não tem nenhuma meta cadastrada! </h2>
                         <p onClick={newGoalModal.handleOpen} >Cadastrar meta</p>
-                    </NoGoal> }
+                    </NoGoal> 
 
                 <NewGoalModal
                     isOpen={newGoalModal.isOpen}
