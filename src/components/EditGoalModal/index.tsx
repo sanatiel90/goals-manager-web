@@ -59,11 +59,11 @@ export function EditGoalModal({isOpen, handleCloseModal, goal}: EditGoalModalPro
             return;
         }
 
-        /*if(new Date(deadline).getTime() < new Date().getTime()){
+        if(new Date(deadline).getTime() < new Date().getTime()){
             setErrorDeadline(true);    
             setErrorDeadlineWrong(true);   
             return;
-        }*/
+        }
 
         const goalInput = {            
             id: goal.id,

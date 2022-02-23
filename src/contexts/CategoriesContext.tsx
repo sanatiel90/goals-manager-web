@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, getDoc, getFirestore, onSnapshot, query, setDoc, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getFirestore, onSnapshot, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 
@@ -26,7 +26,7 @@ export function CategoriesContextProvider({ children }: CategoriesContextProvide
 
     const [categories, setCategories] = useState<CategoryType[]>([]);
 
-    const { user } = useAuth();    
+    const { user } = useAuth();        
 
     useEffect(() => {        
         
@@ -56,16 +56,6 @@ export function CategoriesContextProvider({ children }: CategoriesContextProvide
              
     }, [user]);
 
-
-    async function updateCategory(editCategoryInput: CategoryType){        
-        if (user) {            
-            await setDoc(doc(getFirestore(), 'categories', editCategoryInput.id), {
-                ...editCategoryInput
-            });            
-        }
-    }
-
-
     async function findCategory(categoryId: string){
         if(user){                        
             const categoryRef = doc(getFirestore(), 'categories', categoryId); //recupera a ref 
@@ -82,10 +72,65 @@ export function CategoriesContextProvider({ children }: CategoriesContextProvide
     }
 
 
-    async function deleteCategory(categoryId: string){
-        await deleteDoc(doc(getFirestore(), 'categories', categoryId));
+    async function updateCategory(editCategoryInput: CategoryType){        
+        if (user) {            
+            //pega a cat (apenas para depois poder atualizar as goals com base no title da categoria)
+            const oldCategory = await findCategory(editCategoryInput.id);
+
+            //atualiza a category
+            await setDoc(doc(getFirestore(), 'categories', editCategoryInput.id), {
+                ...editCategoryInput
+            });            
+
+            //atualiza a category das goals
+            if(oldCategory){
+                updateCategoryOfGoal(oldCategory, editCategoryInput.title);
+            }
+            
+        }
     }
 
+    async function deleteCategory(categoryId: string){
+        //pega a cat (apenas para depois poder atualizar as goals com base no title da categoria)
+        const oldCategory = await findCategory(categoryId);
+
+        //apaga a cat
+        await deleteDoc(doc(getFirestore(), 'categories', categoryId));
+
+        //atualiza a category das goals com vazio
+        if(oldCategory){
+            updateCategoryOfGoal(oldCategory, '');
+        }
+    }
+
+    //funcao para atualizar a categoria das goals apos a cat ser editada ou apagada
+    async function updateCategoryOfGoal(oldCategory: CategoryType, newValue: string){
+        if(user){
+            //pega a ref das goals
+            const goalsRef = collection(getFirestore(), 'goals'); 
+            //qry pra pegar as goals que tiverem essa cat
+            const queryGoals = query(goalsRef, 
+                where('userId', '==', user.id),
+                where('category', '==', oldCategory.title),                                        
+            );             
+
+            //cria o snaphshot com o result e faz um loop
+            onSnapshot(queryGoals, goalsSnapshot => {                
+                goalsSnapshot.forEach(async goal => {
+                    
+                    //pega a ref da goal do loop
+                    const goalUpdateRef = doc(getFirestore(), 'goals', goal.id);
+
+                    //atualiza o campo categoria dessa goal pra ficar igual ao newValue passado
+                    await updateDoc(goalUpdateRef, {
+                        category: newValue
+                    });                                                                   
+                })
+            })
+        }
+    }
+
+    
     return(    
         <CategoriesContext.Provider value={{ categories, deleteCategory, findCategory, updateCategory }} >
             {children}

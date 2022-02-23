@@ -29,6 +29,7 @@ interface GoalContextType {
     deleteGoal: (goalId: string) => Promise<void>;
     findGoal: (goalId: string) => Promise<GoalType | undefined>;
     updateGoal: (editGoal: GoalType) => Promise<void>;
+    updateCurrentStatus: (goalId: string, currentStatus: string) => Promise<void> ;
 }
 
 export const GoalsContext = createContext<GoalContextType>({} as GoalContextType);
@@ -164,69 +165,14 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
             }                     
         }
     }
-
-
-    function detailAllGoals(){
-        /*if(user) {
-            let goalsFirebase: GoalType[] = []; //array aux
-            const goalsRef = collection(getFirestore(), 'goals'); //pega a ref
-            const queryGoals = query(goalsRef, 
-                                        where('userId', '==', user.id), 
-                                        where('status', '!=', 'finished'),
-                                        orderBy('createdAt', 'desc'),
-                                        limit(10),                                        
-                                    ); //monta query
-
-            //pega os dados em tempo real e coloca num array
-            onSnapshot(queryGoals, goalsSnapshot => {
-                goalsFirebase = [];
-                goalsSnapshot.forEach(goal => {
-
-                    //se o status nao estiver finalizado, olhar se esta atrasado ou em atencao
-                    let currentStatus = goal.data().status;                                                            
-                    if(currentStatus !== 'finished'){      
-                        const currentDeadline = goal.data().deadline;   
-                        
-                        if(new Date(currentDeadline).getDate() > new Date().getDate() && currentStatus !== 'open'){
-                            currentStatus = 'open';
-                        }  
-
-                        if(new Date(currentDeadline).getDate() === new Date().getDate() && currentStatus !== 'caution'){                           
-                            currentStatus = 'caution';
-                        }  
-
-                        if(new Date(currentDeadline).getDate() < new Date().getDate() && currentStatus !== 'late'){                            
-                            currentStatus = 'late';
-                        }                                                   
-                    }
-
-                    //se tiver mudado o status, atualizar no banco
-                    if(currentStatus !== goal.data().status) {                        
-                         updateCurrentStatus(goal.id, currentStatus);
-                    }
-
-                    goalsFirebase.push({
-                        id: goal.id,
-                        title: goal.data().title,
-                        category: goal.data().category,
-                        deadline: goal.data().deadline,
-                        status: currentStatus,
-                        userId: goal.data().userId,
-                        createdAt: goal.data().createdAt,
-                    });
-                });
-
-                setGoals(goalsFirebase);
-            })*/
-    }
-
+    
     //apaga uma goal
     async function deleteGoal(goalId: string){
         await deleteDoc(doc(getFirestore(), 'goals', goalId));
     }
 
     return (
-        <GoalsContext.Provider value={{ goals, createNewGoal, deleteGoal, findGoal, updateGoal }}>
+        <GoalsContext.Provider value={{ goals, createNewGoal, deleteGoal, findGoal, updateGoal, updateCurrentStatus }}>
             {children}
         </GoalsContext.Provider>
     )

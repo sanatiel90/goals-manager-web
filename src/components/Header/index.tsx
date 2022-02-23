@@ -6,7 +6,12 @@ import { BoxUserModal } from "../BoxUserModal";
 import { NewCategoryModal } from "../NewCategoryModal";
 import { NewGoalModal } from "../NewGoalModal";
 
-import { HeaderContainer, Content, HeaderLogo, HeaderInfo, HeaderMenu, UserPicture, MenuItem } from './style';
+import addGoalIcon from './../../assets/images/add-file-16.png';
+import addCategoryIcon from './../../assets/images/add-list-16.png';
+import listCategoryIcon from './../../assets/images/list-2-16.png';
+
+
+import { HeaderContainer, Content, HeaderLogo, HeaderInfo, HeaderMenu, UserPicture, MenuItem, ActionsMenu } from './style';
 
 export function Header() {
 
@@ -26,17 +31,34 @@ export function Header() {
         navigate('/');
     }
 
+    function handleLinkToCategories(){
+        navigate('/categories-detail');
+    }
+
 
     return(
         <HeaderContainer  >
             <Content>
                 <HeaderLogo> <Link to="/home">GoalsManager</Link> </HeaderLogo>            
                 <HeaderInfo >
+                        
+                        <ActionsMenu>
+                            <button onClick={newGoalModal.handleOpen}>
+                                <img src={addGoalIcon} alt="Add meta" />
+                            </button>
+                            <button onClick={newCategoryModal.handleOpen}>
+                                <img src={addCategoryIcon} alt="Add categoria" />
+                            </button>                            
+                            <button onClick={handleLinkToCategories}>
+                                <img src={listCategoryIcon} alt="List categorias" />
+                            </button>
+                        </ActionsMenu>
+
                     <nav>
                         <HeaderMenu>
-                            <MenuItem> <span onClick={newCategoryModal.handleOpen}>Nova Categoria </span> </MenuItem>
-                            <MenuItem> <span onClick={newGoalModal.handleOpen}>Nova Meta </span>  </MenuItem>
-                            <MenuItem> <Link to="/categories-detail">Listar Categorias</Link> </MenuItem>
+                            <MenuItem onClick={newGoalModal.handleOpen}> <span>Nova Meta </span>  </MenuItem>
+                            <MenuItem onClick={newCategoryModal.handleOpen} > <span>Nova Categoria</span> </MenuItem>                            
+                            <MenuItem onClick={handleLinkToCategories} > <span>Listar Categorias </span>  </MenuItem>
                         </HeaderMenu>
                     </nav>
                     <UserPicture>

@@ -241,8 +241,9 @@ interface TableContainerProps {
 
 export const TableContainer = styled.div<TableContainerProps>`
     display: ${props => !props.isVisible && 'none'};
+    
 
-    margin-top: 1rem;    
+    margin-top: 0.5rem;    
 
     table {        
         width: 100%;
@@ -254,8 +255,16 @@ export const TableContainer = styled.div<TableContainerProps>`
             text-align: left;
         }
 
+        tr {
+            display: flex;
+            gap: 0.2rem;
+            margin-bottom: 0.5rem;
+            
+        }
+
         td {            
             padding: 1rem;
+            
             border: 0;
             background: #E3F2FD;            
             border-radius: 0.25rem;     

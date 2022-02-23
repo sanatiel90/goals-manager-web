@@ -29,7 +29,12 @@ export const HeaderLogo = styled.h3`
 
     a {
         text-decoration: none;
-        color: var(--fontColorLight);
+        color: var(--fontColorLight);        
+    }
+
+    @media(max-width: 720px){
+        font-size: 1.2rem;
+        margin-left: 0.5rem; 
     }
 
 `;
@@ -37,6 +42,7 @@ export const HeaderLogo = styled.h3`
 export const HeaderInfo = styled.div`
     display: flex;
     flex-direction: row; 
+    
 
     nav {
         margin-right: 0.6rem;     
@@ -45,8 +51,46 @@ export const HeaderInfo = styled.div`
             display: none;
         }
     }
+`;
 
-    
+export const ActionsMenu = styled.div`
+
+    @media(min-width: 721px){
+        display: none;
+    }
+
+    margin-right: 1rem;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: row;    
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    button {
+        border: 0;
+        border-radius: 0.25rem;
+        background: var(--primaryBlue);
+        padding: 0.4rem 0.8rem;
+
+        width: 100%;
+        max-width: 4rem;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        transition: background-color 0.5s;        
+
+        &:hover {
+            background-color: #3F51B5;
+        }
+
+        img {
+            height: 1.1rem;
+            width: 1.1rem;
+        }
+    }    
 `;
 
 export const HeaderMenu = styled.ul`
@@ -55,9 +99,9 @@ export const HeaderMenu = styled.ul`
 
 export const MenuItem = styled.li`
     display: inline-block;
-    padding: 1.20rem;
-    
-                
+    padding: 1.20rem;    
+    cursor: pointer;  
+
     a {
         text-decoration: none;
         color: var(--fontColorLight);
@@ -65,8 +109,7 @@ export const MenuItem = styled.li`
     }    
 
     span {
-        color: var(--fontColorLight);
-        cursor: pointer;                
+        color: var(--fontColorLight);        
     }
 
     transition: background-color 0.5s;
@@ -103,4 +146,5 @@ export const UserPicture = styled.div`
         }
     }
 `;
+
 

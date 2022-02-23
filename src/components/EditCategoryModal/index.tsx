@@ -1,10 +1,7 @@
-import { useState, useContext, FormEvent, useEffect } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import Modal from 'react-modal';
 import { toast, ToastContainer } from 'react-toastify';
-import { CategoriesContext } from '../../contexts/CategoriesContext';
-import { useGoal } from '../../hooks/useGoal';
-import { FormContainer, InputForm, SpanError, RadioBoxButton } from './style';
-import imgCheck from './../../assets/images/check-circle.svg';
+import { FormContainer, InputForm } from './style';
 import { useCategory } from '../../hooks/useCategory';
 
 

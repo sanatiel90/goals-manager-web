@@ -1,9 +1,10 @@
 import { Header } from '../../components/Header';
 
-import { Container, Content, CardGoal, CardInfo, StatusBadge, IconButton, NoGoal, FilterOptions, ActionsMenu, TableContainer } from './style';
+import { Container, Content, StatusBadge, IconButton, NoGoal, FilterOptions, TableContainer } from './style';
 
 import editIcon from './../../assets/images/edit-icon.svg';
 import trashIcon from './../../assets/images/trash-icon.svg';
+
 import { useGoal } from '../../hooks/useGoal';
 import { useModal } from '../../hooks/useModal';
 import { NewGoalModal } from '../../components/NewGoalModal';
@@ -30,7 +31,7 @@ export function Home(){
 
     const [goals, setGoals] = useState<GoalType[]>([]);
     
-    const { deleteGoal, findGoal } = useGoal();   
+    const { deleteGoal, findGoal, updateCurrentStatus } = useGoal();   
     const { newGoalModal, editGoalModal } = useModal() ;      
     const [goalEdit, setGoalEdit] = useState({} as GoalType);
 
@@ -83,10 +84,10 @@ export function Home(){
                         }  
                     }
 
-                    /*//se tiver mudado o status, atualizar no banco
+                    //se tiver mudado o status, atualizar no banco
                     if(currentStatus !== goal.data().status) {                        
                          updateCurrentStatus(goal.id, currentStatus);
-                    }*/
+                    }
 
                     goalsFirebase.push({
                         id: goal.id,
@@ -104,7 +105,7 @@ export function Home(){
                
             //unsubscribe();           
         }
-    }, [finishedGoalsFilter, lateGoalsFilter, openGoalsFilter, orderClause, user]);
+    }, [finishedGoalsFilter, lateGoalsFilter, openGoalsFilter, orderClause, user, updateCurrentStatus]);
 
     
 
@@ -158,12 +159,6 @@ export function Home(){
                                 <option value={'category'}>Categoria</option>
                             </select>
                         </FilterOptions>   
-
-                        <ActionsMenu>
-                            <button onClick={newGoalModal.handleOpen} >+ Meta</button>
-                            <button >+ Cat.</button>
-                            <button>- Cat.</button>
-                        </ActionsMenu>
                                                               
                       </>      
                     }                
@@ -219,62 +214,5 @@ export function Home(){
         </Container>       
     );
     
-    /*const { goals, deleteGoal, findGoal } = useGoal();   
-    const { newGoalModal, editGoalModal } = useModal() ;      
-    const [goalEdit, setGoalEdit] = useState({} as GoalType);
-    
-
-    async function handleDeleteGoal(id: string) {
-        if(window.confirm('Deseja realmente excluir essa meta?')){
-            await deleteGoal(id);
-        }        
-    }
-    
-
-    async function handleEditGoal(id: string){                        
-        const goal = await findGoal(id);                
-        if(goal){            
-            setGoalEdit(goal);
-            editGoalModal.handleOpen();
-        }
-    }
-
-    return(
-        <Container>                        
-            <Header />
-            <Content>
-                { goals.length > 0 ? goals.map(goal => (
-                                        
-                    <CardGoal key={goal.id} >                        
-                        <CardInfo flexAmount={1.5} ><span>{goal.title}</span></CardInfo>
-                        <CardInfo><span>{goal.category}</span></CardInfo>
-                        <CardInfo><span>{Intl.DateTimeFormat('pt-BR', {timeZone: 'UTC'}).format(new Date(goal.deadline))}</span></CardInfo>
-                        <CardInfo><StatusBadge statusColor={status[goal.status].color} >{status[goal.status].desc}</StatusBadge></CardInfo>
-                        <CardInfo>
-                            <IconButton onClick={() => handleEditGoal(goal.id)}  actionType={'edit'} ><img src={editIcon} alt="Editar" /></IconButton>
-                            <IconButton onClick={() => handleDeleteGoal(goal.id)} actionType={'delete'} ><img src={trashIcon} alt="Deletar" /></IconButton>
-                        </CardInfo>
-                    </CardGoal>                        
-                )) :                 
-                    <NoGoal>
-                        <h2>Você ainda não tem nenhuma meta cadastrada! </h2>
-                        <p onClick={newGoalModal.handleOpen} >Cadastrar meta</p>
-                    </NoGoal> }
-
-                <NewGoalModal
-                    isOpen={newGoalModal.isOpen}
-                    handleCloseModal={newGoalModal.handleClose}
-                />   
-
-                <EditGoalModal
-                    isOpen={editGoalModal.isOpen}
-                    handleCloseModal={editGoalModal.handleClose}
-                    goal={goalEdit}
-                />
-                                          
-            </Content>
-            
-        </Container>       
-    );*/
 }
 
