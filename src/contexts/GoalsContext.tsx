@@ -40,7 +40,7 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
     const [goals, setGoals] = useState<GoalType[]>([]);
 
     //carrega 10 metas ordenadas pelo prazo de conclusao
-    useEffect(() => {
+    /*useEffect(() => {
         //chamada ao firebase para carregar as 10 ultimas goals
         if(user) {
             let goalsFirebase: GoalType[] = []; //array aux
@@ -97,7 +97,7 @@ export function GoalsContextProvider({children}: GoalsContextProviderProps) {
                
             //unsubscribe();           
         }
-    }, [user]);
+    }, [user]);*/
 
     async function updateCurrentStatus(goalId: string, currentStatus: string) {
         const goalRef = doc(getFirestore(), "goals", goalId);

@@ -6,6 +6,7 @@ export function useModal() {
     const [isModalNewGoalOpen, setIsModalNewGoalOpen] = useState(false);
     const [isModalEditGoalOpen, setIsModalEditGoalOpen] = useState(false);
     const [isModalNewCategoryOpen, setIsModalNewCategoryOpen] = useState(false);
+    const [isModalEditCategoryOpen, setIsModalEditCategoryOpen] = useState(false);
 
     function handleOpenModalUser() {
         setIsModalUserOpen(true);
@@ -38,6 +39,15 @@ export function useModal() {
     function handleCloseModalNewCategory(){
         setIsModalNewCategoryOpen(false);
     }
+
+
+    function handleOpenModalEditCategory(){
+        setIsModalEditCategoryOpen(true);
+    }
+
+    function handleCloseModalEditCategory(){
+        setIsModalEditCategoryOpen(false);
+    }
     
     const boxUserModal = {
         isOpen: isModalUserOpen,
@@ -63,11 +73,18 @@ export function useModal() {
         handleClose: handleCloseModalNewCategory
     }
 
+    const editCategoryModal = {
+        isOpen: isModalEditCategoryOpen,
+        handleOpen: handleOpenModalEditCategory,
+        handleClose: handleCloseModalEditCategory
+    }
+
     return {
         boxUserModal,
         newGoalModal,
         editGoalModal,
-        newCategoryModal
+        newCategoryModal,
+        editCategoryModal
     }
 
 }

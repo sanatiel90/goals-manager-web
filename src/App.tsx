@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Login } from './pages/Login/index';
 import { Home } from './pages/Home/index';
-import { GoalsDetail } from './pages/GoalsDetail/index';
+import { CategoriesDetail } from './pages/CategoriesDetail/index';
 
 import { GlobalStyle } from './styles/global';
 import './services/firebase';
@@ -20,7 +20,7 @@ function App() {
         <Routes>
           <Route path="/" element={ <Login/> } />        
           <Route path="/home" element={ <Home/> }  />
-          <Route path="/goals-detail" element={<GoalsDetail /> }  />        
+          <Route path="/categories-detail" element={<CategoriesDetail /> }  />        
         </Routes>        
 
       </GlobalContextProvider>

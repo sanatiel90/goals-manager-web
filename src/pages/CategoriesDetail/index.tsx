@@ -8,11 +8,13 @@ import { useGoal } from '../../hooks/useGoal';
 import { useModal } from '../../hooks/useModal';
 import { NewGoalModal } from '../../components/NewGoalModal';
 
-import { status } from './../../shared/status';
+import { status } from '../../shared/status';
 import { EditGoalModal } from '../../components/EditGoalModal';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { collection, getFirestore, onSnapshot, orderBy, OrderByDirection, query, where } from 'firebase/firestore';
+import { useCategory } from '../../hooks/useCategory';
+import { EditCategoryModal } from '../../components/EditCategoryModal';
 
 interface GoalType {
     id: string;
@@ -24,21 +26,24 @@ interface GoalType {
     createdAt: string;
 }
 
-export function GoalsDetail(){
+interface CategoryType {
+    id: string;
+    title: string;
+    userId: string;
+}
+
+export function CategoriesDetail(){
     const { user } = useAuth();
+
+    const { categories, deleteCategory, findCategory } = useCategory();
 
     const [goals, setGoals] = useState<GoalType[]>([]);
     
     const { deleteGoal, findGoal } = useGoal();   
-    const { newGoalModal, editGoalModal } = useModal() ;      
-    const [goalEdit, setGoalEdit] = useState({} as GoalType);
+    const { newGoalModal, editGoalModal, newCategoryModal, editCategoryModal } = useModal() ;      
+    const [categoryEdit, setCategoryEdit] = useState({} as CategoryType);
 
-    const [finishedGoalsFilter, setFinishedGoalsFilter] = useState(true);
-    const [lateGoalsFilter, setLateGoalsFilter] = useState(true);
-    const [openGoalsFilter, setOpenGoalsFilter] = useState(true);
-    const [orderClause, setOrderClause] = useState('deadline');
-
-    useEffect(() => {
+    /*useEffect(() => {
         if(user) {
             let goalsFirebase: GoalType[] = []; //array aux
             const goalsRef = collection(getFirestore(), 'goals'); //pega a ref
@@ -82,10 +87,10 @@ export function GoalsDetail(){
                         }  
                     }
 
-                    /*//se tiver mudado o status, atualizar no banco
+                    //se tiver mudado o status, atualizar no banco
                     if(currentStatus !== goal.data().status) {                        
                          updateCurrentStatus(goal.id, currentStatus);
-                    }*/
+                    }
 
                     goalsFirebase.push({
                         id: goal.id,
@@ -103,22 +108,22 @@ export function GoalsDetail(){
                
             //unsubscribe();           
         }
-    }, [finishedGoalsFilter, lateGoalsFilter, openGoalsFilter, orderClause, user]);
+    }, [finishedGoalsFilter, lateGoalsFilter, openGoalsFilter, orderClause, user]);*/
 
     
 
-    async function handleDeleteGoal(id: string) {
-        if(window.confirm('Deseja realmente excluir essa meta?')){
-            await deleteGoal(id);
+    async function handleDeleteCategory(id: string) {
+        if(window.confirm('Deseja realmente excluir essa categoria?')){
+            await deleteCategory(id);
         }        
     }
     
 
-    async function handleEditGoal(id: string){                        
-        const goal = await findGoal(id);                
-        if(goal){            
-            setGoalEdit(goal);
-            editGoalModal.handleOpen();
+    async function handleEditCategory(id: string){                        
+        const category = await findCategory(id);                
+        if(category){            
+            setCategoryEdit(category);
+            editCategoryModal.handleOpen();
         }
     }
 
@@ -126,70 +131,31 @@ export function GoalsDetail(){
         <Container>                        
             <Header />
             <Content>
-                    { goals.length > 0 &&
-                      <>
-                        <FilterOptions>
-                            <input 
-                                type="checkbox" 
-                                id='finished-goals' 
-                                checked={finishedGoalsFilter} 
-                                onChange={() => finishedGoalsFilter ? setFinishedGoalsFilter(false) : setFinishedGoalsFilter(true) } />
-                            <label htmlFor='finished-goals' >Finalizadas</label>
-                            
-                            <input 
-                                type="checkbox" 
-                                id='late-goals' 
-                                checked={lateGoalsFilter}
-                                onChange={() => lateGoalsFilter ? setLateGoalsFilter(false) : setLateGoalsFilter(true) } />
-                            <label htmlFor='late-goals' >Atrasadas</label>
-
-                            <input 
-                                type="checkbox" 
-                                id='open-goals' 
-                                checked={openGoalsFilter}
-                                onChange={() => openGoalsFilter ? setOpenGoalsFilter(false) : setOpenGoalsFilter(true) } />
-                            <label htmlFor='open-goals' >Em Aberto</label>
-
-                            <span>Ordernar por</span>
-                            <select value={orderClause} onChange={event => setOrderClause(event.target.value)} >
-                                <option value={'deadline'}>Prazo</option>
-                                <option value={'status'}>Status</option>
-                                <option value={'category'}>Categoria</option>
-                            </select>
-                        </FilterOptions>   
-
+                    { categories.length > 0 &&
+                      <>                        
                         <ActionsMenu>
                             <button onClick={newGoalModal.handleOpen} >+ Meta</button>
                             <button >+ Cat.</button>
                             <button>- Cat.</button>
-                        </ActionsMenu>
-                                                              
+                        </ActionsMenu>                                                              
                       </>      
                     }                
                                         
-                    <TableContainer isVisible={goals.length > 0} >            
+                    <TableContainer isVisible={categories.length > 0} >            
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Descrição</th>
-                                    <th>Categoria</th>
-                                    <th>Criada em</th>
-                                    <th>Prazo</th>
-                                    <th>Status</th>
-                                    <th>Ações</th>
+                                    <th>Descrição</th>       
+                                    <th>Ações</th>                             
                                 </tr>
                             </thead>
                             <tbody>
-                                { goals.map(goal => (
-                                    <tr key={goal.id} > 
-                                        <td><span>{goal.title}</span></td>
-                                        <td><span>{goal.category}</span></td>
-                                        <td><span>{goal.createdAt.substring(0, 10)}</span></td>
-                                        <td><span>{Intl.DateTimeFormat('pt-BR', {timeZone: 'UTC'}).format(new Date(goal.deadline))}</span></td>
-                                        <td><StatusBadge statusColor={status[goal.status].color} >{status[goal.status].desc}</StatusBadge></td>
+                                { categories.map(category => (
+                                    <tr key={category.id} > 
+                                        <td ><span>{category.title}</span></td>                                                                                                                        
                                         <td>
-                                            <IconButton onClick={() => handleEditGoal(goal.id)}  actionType={'edit'} ><img src={editIcon} alt="Editar" /></IconButton>                                            
-                                            <IconButton onClick={() => handleDeleteGoal(goal.id)} actionType={'delete'} ><img src={trashIcon} alt="Deletar" /></IconButton>                                            
+                                            <IconButton onClick={() => handleEditCategory(category.id)}  actionType={'edit'} ><img src={editIcon} alt="Editar" /></IconButton>                                            
+                                            <IconButton onClick={() => handleDeleteCategory(category.id)} actionType={'delete'} ><img src={trashIcon} alt="Deletar" /></IconButton>                                            
                                         </td>                                                                                                                                                
                                     </tr>   
                                  )) }
@@ -197,9 +163,9 @@ export function GoalsDetail(){
                         </table>     
                     </TableContainer>                
                                
-                    <NoGoal isVisible={goals.length === 0}>
-                        <h2>Você ainda não tem nenhuma meta cadastrada! </h2>
-                        <p onClick={newGoalModal.handleOpen} >Cadastrar meta</p>
+                    <NoGoal isVisible={categories.length === 0}>
+                        <h2>Você ainda não tem nenhuma categoria cadastrada! </h2>
+                        <p onClick={newCategoryModal.handleOpen} >Cadastrar categoria</p>
                     </NoGoal> 
 
                 <NewGoalModal
@@ -207,10 +173,10 @@ export function GoalsDetail(){
                     handleCloseModal={newGoalModal.handleClose}
                 />   
 
-                <EditGoalModal
-                    isOpen={editGoalModal.isOpen}
-                    handleCloseModal={editGoalModal.handleClose}
-                    goal={goalEdit}
+                <EditCategoryModal
+                    isOpen={editCategoryModal.isOpen}
+                    handleCloseModal={editCategoryModal.handleClose}
+                    category={categoryEdit}
                 />
                                           
             </Content>

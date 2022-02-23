@@ -36,7 +36,7 @@ export function Header() {
                         <HeaderMenu>
                             <MenuItem> <span onClick={newCategoryModal.handleOpen}>Nova Categoria </span> </MenuItem>
                             <MenuItem> <span onClick={newGoalModal.handleOpen}>Nova Meta </span>  </MenuItem>
-                            <MenuItem> <Link to="/goals-detail">Listar Metas</Link> </MenuItem>
+                            <MenuItem> <Link to="/categories-detail">Listar Categorias</Link> </MenuItem>
                         </HeaderMenu>
                     </nav>
                     <UserPicture>
