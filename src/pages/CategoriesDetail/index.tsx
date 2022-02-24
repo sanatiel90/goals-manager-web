@@ -10,6 +10,8 @@ import { NewGoalModal } from '../../components/NewGoalModal';
 import { useState } from 'react';
 import { useCategory } from '../../hooks/useCategory';
 import { EditCategoryModal } from '../../components/EditCategoryModal';
+import { ToastContainer } from 'react-toastify';
+import { NewCategoryModal } from '../../components/NewCategoryModal';
 
 interface CategoryType {
     id: string;
@@ -64,7 +66,9 @@ export function CategoriesDetail(){
                                  )) }
                             </tbody>
                         </table>     
-                    </TableContainer>                
+                    </TableContainer>        
+
+                    <ToastContainer />        
                                
                     <NoGoal isVisible={categories.length === 0}>
                         <h2>Você ainda não tem nenhuma categoria cadastrada! </h2>
@@ -75,6 +79,11 @@ export function CategoriesDetail(){
                     isOpen={newGoalModal.isOpen}
                     handleCloseModal={newGoalModal.handleClose}
                 />   
+
+                <NewCategoryModal
+                    isOpen={newCategoryModal.isOpen}
+                    handleCloseModal={newCategoryModal.handleClose}
+                />  
 
                 <EditCategoryModal
                     isOpen={editCategoryModal.isOpen}

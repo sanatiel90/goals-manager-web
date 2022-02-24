@@ -87,9 +87,7 @@ export function EditGoalModal({isOpen, handleCloseModal, goal}: EditGoalModalPro
             toast.success("Meta atualizada com sucesso!", {
                 position: 'top-center',
                 autoClose: 2000
-            })
-
-            alert('Meta atualizada com sucesso!')
+            })            
 
             if(errorTitle) {
                 setErrorTitle(false);
@@ -107,9 +105,7 @@ export function EditGoalModal({isOpen, handleCloseModal, goal}: EditGoalModalPro
             toast.error("Erro ao atualizar meta", {
                 position: 'top-center',
                 autoClose: 2000
-            })
-
-            alert('Erro ao atualizar meta');
+            })            
         }        
     }
 

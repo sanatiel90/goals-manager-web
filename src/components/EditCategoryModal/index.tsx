@@ -59,9 +59,7 @@ export function EditCategoryModal({isOpen, handleCloseModal, category}: EditCate
             toast.success("Categoria atualizada com sucesso!", {
                 position: 'top-center',
                 autoClose: 2000
-            })
-
-            alert('Categoria atualizada com sucesso!')
+            })            
 
             if(errorTitle) {
                 setErrorTitle(false);
@@ -71,9 +69,7 @@ export function EditCategoryModal({isOpen, handleCloseModal, category}: EditCate
             toast.error("Erro ao atualizar Categoria", {
                 position: 'top-center',
                 autoClose: 2000
-            })
-
-            alert('Erro ao atualizar Categoria');
+            })            
         }        
     }
     

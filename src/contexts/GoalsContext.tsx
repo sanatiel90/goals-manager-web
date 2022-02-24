@@ -1,5 +1,5 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getFirestore, limit, onSnapshot, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { addDoc, collection, deleteDoc, doc, getDoc, getFirestore, setDoc, updateDoc } from "firebase/firestore";
+import { createContext, ReactNode, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 
 interface GoalsContextProviderProps {

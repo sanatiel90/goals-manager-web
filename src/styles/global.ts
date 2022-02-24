@@ -83,6 +83,12 @@ export const GlobalStyle = createGlobalStyle`
         padding: 3rem;
         border-radius: 0.25rem;
         background: #f0f2f5;
+
+        @media(max-width: 720px){
+            padding: 1rem;
+            width: 90%;
+            max-width: 376px;
+        }
     }
 
 `;

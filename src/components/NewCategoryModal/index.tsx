@@ -43,7 +43,7 @@ export function NewCategoryModal({ isOpen, handleCloseModal }: NewCategoryModalP
               autoClose: 2000              
             });
             
-            alert('Categoria criada com sucesso!');
+            //alert('Categoria criada com sucesso!');
 
             if(errorTitle) {
                 setErrorTitle(false);
@@ -52,11 +52,11 @@ export function NewCategoryModal({ isOpen, handleCloseModal }: NewCategoryModalP
             handleCloseModal();
 
         } catch (error) {           
-            toast.success("Erro ao criar categoria", {
+            toast.error("Erro ao criar categoria", {
                 position: toast.POSITION.TOP_CENTER,
                 autoClose: 2000              
             });
-            alert('Erro ao criar categoria');
+            //alert('Erro ao criar categoria');
         }               
     }
 

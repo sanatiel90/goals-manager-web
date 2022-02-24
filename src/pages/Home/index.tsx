@@ -4,6 +4,7 @@ import { Container, Content, StatusBadge, IconButton, NoGoal, FilterOptions, Tab
 
 import editIcon from './../../assets/images/edit-icon.svg';
 import trashIcon from './../../assets/images/trash-icon.svg';
+import checkIcon from './../../assets/images/check-circle.svg';
 
 import { useGoal } from '../../hooks/useGoal';
 import { useModal } from '../../hooks/useModal';
@@ -14,6 +15,7 @@ import { EditGoalModal } from '../../components/EditGoalModal';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { collection, getFirestore, onSnapshot, orderBy, OrderByDirection, query, where } from 'firebase/firestore';
+import { toast, ToastContainer } from 'react-toastify';
 
 interface GoalType {
     id: string;
@@ -31,7 +33,7 @@ export function Home(){
 
     const [goals, setGoals] = useState<GoalType[]>([]);
     
-    const { deleteGoal, findGoal, updateCurrentStatus } = useGoal();   
+    const { deleteGoal, findGoal, updateCurrentStatus, updateGoal } = useGoal();   
     const { newGoalModal, editGoalModal } = useModal() ;      
     const [goalEdit, setGoalEdit] = useState({} as GoalType);
 
@@ -124,6 +126,18 @@ export function Home(){
         }
     }
 
+    async function handleFinishGoal(id: string){
+        let goal = await findGoal(id);                
+        if(goal && window.confirm('Deseja finalizar essa meta?')){            
+            goal.status = 'finished';
+            await updateGoal(goal);
+            toast.success('Meta finalizada!', {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 2000              
+            });                           
+        }
+    }
+
     return(
         <Container>                        
             <Header />
@@ -186,12 +200,15 @@ export function Home(){
                                         <td>
                                             <IconButton onClick={() => handleEditGoal(goal.id)}  actionType={'edit'} ><img src={editIcon} alt="Editar" /></IconButton>                                            
                                             <IconButton onClick={() => handleDeleteGoal(goal.id)} actionType={'delete'} ><img src={trashIcon} alt="Deletar" /></IconButton>                                            
+                                            {goal.status !== 'finished' && <IconButton onClick={() => handleFinishGoal(goal.id)} actionType={'update'} ><img src={checkIcon} alt="Atualizar" /></IconButton> } 
                                         </td>                                                                                                                                                
                                     </tr>   
                                  )) }
                             </tbody>
                         </table>     
-                    </TableContainer>                
+                    </TableContainer>
+
+                    <ToastContainer />                 
                                
                     <NoGoal isVisible={goals.length === 0}>
                         <h2>Você ainda não tem nenhuma meta cadastrada! </h2>

@@ -74,12 +74,13 @@ export const StatusBadge = styled.p<StatusBadgeProps>`
 `;
 
 interface IconButtonProps {
-    actionType: 'edit' | 'delete'
+    actionType: 'edit' | 'delete' | 'update'
 }
 
 const colorIconButton = {
     edit: '#303F9F',
-    delete: '#D32F2F',        
+    delete: '#D32F2F',    
+    update: '#4CAF50',    
 }
 
 export const IconButton = styled.button<IconButtonProps>`         
