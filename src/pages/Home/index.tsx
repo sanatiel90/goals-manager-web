@@ -196,7 +196,7 @@ export function Home(){
                                         <td><span>{goal.category}</span></td>
                                         <td><span>{goal.createdAt.substring(0, 10)}</span></td>
                                         <td><span>{Intl.DateTimeFormat('pt-BR', {timeZone: 'UTC'}).format(new Date(goal.deadline))}</span></td>
-                                        <td><StatusBadge statusColor={status[goal.status].color} >{status[goal.status].desc}</StatusBadge></td>
+                                        <td><StatusBadge statusColor={status[goal.status].color} ><span>{status[goal.status].desc}</span></StatusBadge></td>
                                         <td>
                                             <IconButton onClick={() => handleEditGoal(goal.id)}  actionType={'edit'} ><img src={editIcon} alt="Editar" /></IconButton>                                            
                                             <IconButton onClick={() => handleDeleteGoal(goal.id)} actionType={'delete'} ><img src={trashIcon} alt="Deletar" /></IconButton>                                            

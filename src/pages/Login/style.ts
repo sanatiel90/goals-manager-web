@@ -11,6 +11,9 @@ export const BoxLogin = styled.div`
     height: 15rem;
     width: 100%;
     max-width: 32.5rem;
+    
+    margin: 0 auto;
+
     border: solid 1px var(--borderGrey);
     border-radius: 0.25rem;
     
@@ -20,6 +23,11 @@ export const BoxLogin = styled.div`
     justify-content: space-evenly;
 
     text-align: center;
+
+    @media(max-width: 720px) {
+        max-width: 25rem;
+        padding: 1rem;
+    }
 
     button {        
         border: 0;

@@ -37,8 +37,6 @@ export const CardGoal = styled.div`
     @media(max-width: 720px) {
         
     }
-
-
 `;
 
 interface CardInfoProps {
@@ -70,6 +68,15 @@ export const StatusBadge = styled.p<StatusBadgeProps>`
     font-size: 0.8rem;
 
     background: ${(props) => props.statusColor }; 
+
+    @media(max-width: 720px) {
+        max-width: 2rem;        
+        border-radius: 50%;
+        
+        span {
+            display: none;
+        }
+    }
     
 `;
 
@@ -218,19 +225,31 @@ export const TableContainer = styled.div<TableContainerProps>`
 
     table {        
         width: 100%;
+        
         border-spacing: 0.2rem 0.6rem; //prop que coloca espaçamento entre elementos da table
+
+        @media(max-width: 720px) {
+            thead {
+                display: none;
+            }
+        }
 
         th {            
             font-weight: 400;
             padding: 1rem 1rem;
             text-align: left;
-        }
+        }        
 
         td {            
             padding: 1rem;
             border: 0;
             background: #E3F2FD;            
-            border-radius: 0.25rem;     
+            border-radius: 0.25rem; 
+            
+            @media(max-width: 720px) {
+                padding: 0.6rem;
+                font-size: 0.9rem;
+            }
             
             button {
                 @media(max-width: 720px) {
